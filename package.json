@@ -1,0 +1,26 @@
+{
+  "name": "complete_nodejs",
+  "version": "1.0.0",
+  "description": "all nitty-gritty about node i will cover here",
+  "main": "App.js",
+  "scripts": {
+    "start": "nodemon App.js",
+    "start-server" : "node App.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Nilotpal35/NodeJS.git"
+  },
+  "author": "Nilotpal Mandal",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Nilotpal35/NodeJS/issues"
+  },
+  "homepage": "https://github.com/Nilotpal35/NodeJS#readme",
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
