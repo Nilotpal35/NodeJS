@@ -1,0 +1,38 @@
+doctype html
+html(lang="en")
+    head
+        meta(charset="UTF-8")
+        meta(name="viewport", content="width=device-width, initial-scale=1.0")
+        title #{pageTitle}
+        link(rel="stylesheet", href="/css/index.css")
+    body
+        each products in prods 
+            header.header_main 
+                nav.header_nav
+                    ul.header_ul
+                        li.header_li
+                            a(href="/") HOME
+                        li.header_li
+                            a(href="/admin/add-product") ADD-PRODUCT
+                        li.header_li
+                            a.active(href="/products") PRODUCT
+            div.main_div
+                h1 This is Full Product Post page
+                h2 #{products}
+            footer.main_footer
+                p &copy; 2023 Nilotpal &reg; MIT License
+        //- else 
+        //-     header.header_main 
+        //-         nav.header_nav
+        //-             ul.header_ul
+        //-                 li.header_li
+        //-                     a(href="/") HOME
+        //-                 li.header_li
+        //-                     a(href="/admin/add-product") ADD-PRODUCT
+        //-                 li.header_li
+        //-                     a.active(href="/products") PRODUCT
+        //-     div.main_div
+        //-         h1 This is Full Product Post page
+        //-         h2 No Products to show
+        //-     footer.main_footer
+        //-         p &copy; 2023 Nilotpal &reg; MIT License
