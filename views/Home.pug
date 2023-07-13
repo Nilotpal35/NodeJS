@@ -10,14 +10,12 @@ html(lang="en")
             nav.header_nav
                 ul.header_ul
                     li.header_li
-                        a(href="/") HOME
+                        a.active(href="/") HOME
                     li.header_li
                         a(href="/admin/add-product") ADD-PRODUCT
                     li.header_li
-                        a.active(href="/products") PRODUCT
+                        a(href="/products") PRODUCT
         div.main_div
-            h1 This is Full Product Post page
-            each product in prods 
-                h2 #{product}
+            h1 This is Home page
         footer.main_footer
             p &copy; 2023 Nilotpal &reg; MIT License
