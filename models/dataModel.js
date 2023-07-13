@@ -3,6 +3,16 @@ const { readFile, writeFile, read } = require("fs");
 
 const Products = [];
 
+const readFileFromStorage = (cb) => {
+  readFile("data.json", (err, readData) => {
+    if (!err) {
+      cb(readData);
+    } else {
+      cb([]);
+    }
+  });
+};
+
 module.exports = class productData {
   constructor(item) {
     this.item = item;
@@ -24,12 +34,6 @@ module.exports = class productData {
   }
 
   static getData(cb) {
-    readFile("data.json", (err, readData) => {
-      if (!err) {
-        cb(JSON.parse(readData));
-      } else {
-        cb([]);
-      }
-    });
+    readFileFromStorage(cb);
   }
 };
