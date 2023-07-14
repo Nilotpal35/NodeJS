@@ -1,6 +1,5 @@
 const adminRoute = require("./routes/admin");
 const shopRoute = require("./routes/shop");
-
 const express = require("express");
 const body_parser = require("body-parser");
 const { getErrorPage } = require("./controllers/utility");

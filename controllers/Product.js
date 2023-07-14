@@ -1,49 +1,61 @@
 // const products = [];
 
-const productData = require("../models/dataModel");
+const { productDataModel } = require("../models/dataModel");
 
 exports.getAddProduct = (req, res, next) => {
   res.render("AddProduct");
 };
 
 exports.postAddProduct = (req, res, next) => {
-  const store = new productData(req.body.product);
+  const store = new productDataModel(req.body.product);
   store.storeData();
   res.redirect("/products");
 };
 
 exports.getProduct = (req, res, next) => {
-  const fetchedData = [];
-  productData.getData((bufferData) => {
-    fetchedData.push(bufferData);
-    console.log("data", fetchedData);
-    const product = Buffer.concat(fetchedData).toString();
-    if (product) {
-      console.log("product exist", product && JSON.parse(product));
-      return res.render("ProductPost", {
-        pageTitle: "ProductPost",
-        prods: product && JSON.parse(product),
-      });
-    } else {
-      console.log("nothing existy");
-      return res.render("ProductPost", {
-        pageTitle: "ProductPost",
-        prods: [],
-      });
+  //new approach
+  const products = [];
+  productDataModel.getData((fetchedData) => {
+    if (fetchedData) {
+      const data = JSON.parse(fetchedData);
+      products.push(...data);
     }
-    // if (product) {
-    //   console.log("data present", product);
-    // } else {
-    //   console.log("no data", product);
-    // }
-    //   // res.render("ProductPost", {
-    //   //   pageTitle: "ProductPost",
-    //   //   prods: product,
-    //   // });
-    //   res.render("Error");
+    res.render("ProductPost", {
+      pageTitle: "ProductPost",
+      prods: products,
+    });
   });
-
-  //res.render("Error");
-
-  //res.sendFile(path.join(__dirname, "../", "views", "ProductPost.html"));
 };
+
+///OLDER APPROCHES FOR GETTING STORED DATA FROM data.json file
+
+//older approach
+// const fetchedData = [];
+// productData.getData((bufferData) => {
+// fetchedData.push(bufferData);
+// console.log("data", fetchedData);
+// const product = Buffer.concat(fetchedData).toString();
+// if (product) {
+//   console.log("product exist", product && JSON.parse(product));
+//   // return res.render("ProductPost", {
+//   //   pageTitle: "ProductPost",
+//   //   prods: product && JSON.parse(product),
+//   // });
+// } else {
+//   console.log("nothing existy");
+//   // res.render("ProductPost", {
+//   //   pageTitle: "ProductPost",
+//   //   prods: [],
+//   // });
+//   }
+//   // if (product) {
+//   //   console.log("data present", product);
+//   // } else {
+//   //   console.log("no data", product);
+//   // }
+//   // res.render("ProductPost", {
+//   //   pageTitle: "ProductPost",
+//   //   prods: product,
+//   // });
+//   // res.render("Error");
+// });
