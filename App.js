@@ -1,5 +1,6 @@
 const adminRoute = require("./routes/admin");
 const shopRoute = require("./routes/shop");
+const homeRoute = require("./routes/home");
 const express = require("express");
 const body_parser = require("body-parser");
 const { getErrorPage } = require("./controllers/utility");
@@ -14,7 +15,9 @@ app.use(express.static("public"));
 
 app.use("/admin", adminRoute.admin);
 
-app.use("/", shopRoute);
+app.use("/products", shopRoute);
+
+app.use("/", homeRoute);
 
 app.use(getErrorPage);
 

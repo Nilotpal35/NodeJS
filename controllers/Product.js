@@ -20,7 +20,7 @@ exports.getProduct = (req, res, next) => {
       const data = JSON.parse(fetchedData);
       products.push(...data);
     }
-    res.render("ProductPost", {
+    res.render("Products", {
       pageTitle: "ProductPost",
       prods: products,
     });

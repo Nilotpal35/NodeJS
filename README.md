@@ -1,3 +1,3 @@
 # NodeJS
 
-Implemented Models Views COntrolers Architechture in this code.
+Added more pages and adding some extra functionality to make it more interactive user experience

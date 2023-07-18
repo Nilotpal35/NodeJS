@@ -15,9 +15,19 @@ html(lang="en")
                         a(href="/admin/add-product") ADD-PRODUCT
                     li.header_li
                         a.active(href="/products") PRODUCT
+                    li.header_li
+                        a(href="#") CART
+                    li.header_li
+                        a(href="#") FAVOURITE
         div.main_div
             h1 This is Full Product Post page
-            each product in prods 
-                h2 #{product}
+            div.container
+                each product in prods
+                    div.products
+                        img.image(src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTJ0WV7kAvfRFqnOkgl0hv5JLzqX_QJMe2Xeqp5wV9yClqkCaZXop7Zv83S1ewzY8bPCgQ&usqp=CAU", alt=`#{${product}}`,)
+                        h3.title #{product}
+                        div.btnCtr
+                            p.button add 
+                            p.button wish
         footer.main_footer
             p &copy; 2023 Nilotpal &reg; MIT License
