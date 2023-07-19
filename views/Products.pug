@@ -27,8 +27,14 @@ html(lang="en")
                         img.image(src=product.imageUrl, alt=`${product.title}`,)
                         p.title #{product.title}
                         div.btnCtr
-                            a.button(href=`/cart/add-cart/${product.id}`) add 
-                            a.button(href=`/products/delete/${product.id}`) delete 
-                            a.button(href=`/product-detail/${product.id}`) details
+                            form(action="/cart/add-cart", method="post") 
+                                input(type="hidden", name="prodId" , value=`${product.id}`)
+                                button.button(type="submit") Add
+                            form(action="/products/delete", method="post")
+                                input(type="hidden", name="prodId" , value=`${product.id}`)
+                                button.button(type="submit") Delete
+                            form(action="/product-detail", method="post")
+                                input(type="hidden", name="prodId" , value=`${product.id}`)
+                                button.button(type="submit") Details
         footer.main_footer
             p &copy; 2023 Nilotpal &reg; MIT License

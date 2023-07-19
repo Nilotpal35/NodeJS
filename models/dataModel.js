@@ -69,9 +69,9 @@ exports.productDataModel = class productData {
         cartProducts.push(...JSON.parse(f));
       }
       readFunction(storePath, (F) => {
-        console.log(JSON.parse(F)?.find((item) => item.id === prodId));
-        const productExist = cartProducts.filter((item) => item.id === prodId);
-        if (productExist.length === 0) {
+        //console.log(JSON.parse(F)?.find((item) => item.id === prodId));
+        const productExist = cartProducts.find((item) => item.id === prodId);
+        if (!productExist) {
           cartProducts.push(JSON.parse(F)?.find((item) => item.id === prodId));
           writeFile(cartPath, JSON.stringify(cartProducts), (err) => {
             if (err) {

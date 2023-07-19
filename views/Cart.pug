@@ -20,15 +20,21 @@ html(lang="en")
                     li.header_li
                         a(href="#") FAVOURITE
         div.main_div
-            h1 This is Cart page
+            div.cartHeader
+                h2 Total items x #{cartQty} -
+                h2 $#{totalPrice}
             div.cartContainer
                 each product in prods
                     div.cartProducts
                         img.image(src=product.imageUrl, alt=`#{${product}}`,)
                         p.title #{product.title}
                         div.btnCtr
-                            a.button(href="#") checkout 
-                            a.button(href=`/cart/delete/${product.id}`) delete 
-                            a.button(href=`/product-detail/${product.id}`) details
+                            a.button(href="#") Checkout 
+                            form(action="/cart/delete", method="post")
+                                input(type="hidden", name="prodId" , value=`${product.id}`)
+                                button.button(type="submit") Delete
+                            form(action="/product-detail", method="post")
+                                input(type="hidden", name="prodId" , value=`${product.id}`)
+                                button.button(type="submit") Details
         footer.main_footer
             p &copy; 2023 Nilotpal &reg; MIT License

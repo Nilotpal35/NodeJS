@@ -32,7 +32,7 @@ exports.getProduct = (req, res, next) => {
 };
 
 exports.getProductDetails = (req, res, next) => {
-  const { prodId } = req.params;
+  const { prodId } = req.body;
   const product = [];
   productDataModel.getProduct(prodId, (fetchedData) => {
     if (fetchedData) {
@@ -46,7 +46,7 @@ exports.getProductDetails = (req, res, next) => {
 };
 
 exports.addCart = (req, res, next) => {
-  const { prodId } = req.params;
+  const { prodId } = req.body;
   productDataModel.addCart(prodId);
   res.redirect("/cart");
 };
@@ -58,21 +58,27 @@ exports.getCart = (req, res, next) => {
       const data = JSON.parse(fetchedData);
       cartProducts.push(...data);
     }
+    const totalPrice = cartProducts.reduce((acc, curr) => {
+      return (acc = (+acc) + (+curr.price));
+    }, 0);
+    console.log("PRICE", totalPrice);
     res.render("Cart", {
       pageTitle: "Cart",
       prods: cartProducts,
+      cartQty: cartProducts.length,
+      totalPrice : totalPrice,
     });
   });
 };
 
 exports.deleteProduct = (req, res, next) => {
-  const { prodId } = req.params;
+  const { prodId } = req.body;
   productDataModel.deleteProduct(prodId);
   res.redirect("/products");
 };
 
 exports.deleteCart = (req, res, next) => {
-  const { prodId } = req.params;
+  const { prodId } = req.body;
   productDataModel.deleteCart(prodId);
   res.redirect("/cart");
 };

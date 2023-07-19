@@ -152,6 +152,7 @@ button {
   padding: 4px 8px;
   border-radius: 5px;
   text-align: center;
+  border-style: none;
 }
 
 .button:hover {
@@ -166,8 +167,8 @@ button {
   background-color: #01666e;
   border-radius: 10px;
   overflow: hidden;
-  margin-top : 20px;
-  margin-bottom: 20px;
+  margin-top : 1rem;
+  margin-bottom: 1rem;
 }
 
 .dimage {
@@ -206,4 +207,14 @@ button {
   margin: 10px;
   border-radius: 10px;
   overflow: hidden;
+}
+
+
+.cartHeader {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 30vw;
+  background-color: #063715;
+  padding: 1rem;
 }

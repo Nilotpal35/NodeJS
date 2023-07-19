@@ -9,8 +9,8 @@ const routes = express.Router();
 
 routes.get("/", getProduct);
 
-routes.get("/delete/:prodId", deleteProduct);
+routes.post("/delete", deleteProduct);
 
-routes.get("/:prodId", getProductDetails);
+routes.post("/", getProductDetails);
 
 module.exports = routes;
