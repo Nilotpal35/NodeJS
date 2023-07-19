@@ -1,12 +1,14 @@
 const path = require("path");
 
-const { readFile, writeFile } = require("fs");
+const { readFile, writeFile, write, read } = require("fs");
 
 //creating a path for storage of data
 const storePath = path.join(__dirname, "../", "store", "data.json");
+const cartPath = path.join(__dirname, "../", "store", "cart.json");
 
-function readFileFromStorage(cb) {
-  readFile(storePath, (err, readData) => {
+//read files mentioned in path
+function readFileFromStorage(path, cb) {
+  readFile(path, (err, readData) => {
     if (!err) {
       cb(readData);
     } else {
@@ -18,9 +20,9 @@ function readFileFromStorage(cb) {
 }
 
 //additional layer to process the buffer data and retutn
-function readFunction(cb) {
+function readFunction(path, cb) {
   const fetchedData = [];
-  readFileFromStorage((bufferData) => {
+  readFileFromStorage(path, (bufferData) => {
     fetchedData.push(bufferData);
     const product = Buffer.concat(fetchedData).toString();
     cb(product);
@@ -29,18 +31,14 @@ function readFunction(cb) {
 
 //exports the class for product data store and fetch related logic
 exports.productDataModel = class productData {
-  constructor(item) {
-    this.item = item;
-  }
-
-  //store the upcoming data from add-product and merge it with older data if present
-  storeData() {
+  //store the upcoming data from add-product form and merge it with older data if present
+  storeData(formData) {
     const products = [];
-    readFunction((f) => {
+    readFunction(storePath, (f) => {
       if (f) {
         products.push(...JSON.parse(f));
       }
-      products.push(this.item);
+      products.push(formData);
       writeFile(storePath, JSON.stringify(products), (err) => {
         if (err) {
           console.log("Error in writting new data", err);
@@ -49,8 +47,75 @@ exports.productDataModel = class productData {
     });
   }
 
+  //get all products data from data.json
   static getData(cb) {
-    readFunction(cb);
+    readFunction(storePath, cb);
+  }
+
+  //get individual product data from data.json file
+  static getProduct(prodId, cb) {
+    const product = [];
+    readFunction(storePath, (f) => {
+      product.push(JSON.parse(f)?.find((item) => item.id === prodId));
+      cb(product);
+    });
+  }
+
+  //add new data into cart, cart.json file
+  static addCart(prodId) {
+    const cartProducts = [];
+    readFunction(cartPath, (f) => {
+      if (f) {
+        cartProducts.push(...JSON.parse(f));
+      }
+      readFunction(storePath, (F) => {
+        console.log(JSON.parse(F)?.find((item) => item.id === prodId));
+        const productExist = cartProducts.filter((item) => item.id === prodId);
+        if (productExist.length === 0) {
+          cartProducts.push(JSON.parse(F)?.find((item) => item.id === prodId));
+          writeFile(cartPath, JSON.stringify(cartProducts), (err) => {
+            if (err) {
+              console.log("Error in writting new data", err);
+            }
+          });
+        }
+      });
+    });
+  }
+
+  //get list of cart items from cart.json file
+  static getCartList(cb) {
+    readFunction(cartPath, (f) => {
+      cb(f);
+    });
+  }
+
+  // delete the product item from data.json file
+  static deleteProduct(prodId) {
+    const products = [];
+    readFunction(storePath, (f) => {
+      products.push(...JSON.parse(f));
+      const finalProduct = products.filter((item) => item.id !== prodId);
+      writeFile(storePath, JSON.stringify(finalProduct), (err) => {
+        if (err) {
+          throw new Error("Some issue in deleting the product");
+        }
+      });
+    });
+  }
+
+  //delete cart items from cart.json file
+  static deleteCart(prodId) {
+    const cartProducts = [];
+    readFunction(cartPath, (f) => {
+      cartProducts.push(...JSON.parse(f));
+      const finalProduct = cartProducts.filter((item) => item.id !== prodId);
+      writeFile(cartPath, JSON.stringify(finalProduct), (err) => {
+        if (err) {
+          throw new Error("Some issue in deleting the product from cart");
+        }
+      });
+    });
   }
 };
 

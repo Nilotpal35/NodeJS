@@ -14,21 +14,21 @@ html(lang="en")
                     li.header_li
                         a(href="/admin/add-product") ADD-PRODUCT
                     li.header_li
-                        a.active(href="/products") PRODUCT
+                        a(href="/products") PRODUCT
                     li.header_li
-                        a(href="/cart") CART
+                        a.active(href="/cart") CART
                     li.header_li
                         a(href="#") FAVOURITE
         div.main_div
-            h1 This is Full Product Post page
-            div.container
+            h1 This is Cart page
+            div.cartContainer
                 each product in prods
-                    div.products
-                        img.image(src=product.imageUrl, alt=`${product.title}`,)
+                    div.cartProducts
+                        img.image(src=product.imageUrl, alt=`#{${product}}`,)
                         p.title #{product.title}
                         div.btnCtr
-                            a.button(href=`/cart/add-cart/${product.id}`) add 
-                            a.button(href=`/products/delete/${product.id}`) delete 
+                            a.button(href="#") checkout 
+                            a.button(href=`/cart/delete/${product.id}`) delete 
                             a.button(href=`/product-detail/${product.id}`) details
         footer.main_footer
             p &copy; 2023 Nilotpal &reg; MIT License

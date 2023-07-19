@@ -54,13 +54,13 @@ a {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  /* justify-content: center; */
 }
 
 .form {
   margin: 1rem;
-  width: 300px;
-  height: 200px;
+  width: 350px;
+  /* height: 200px; */
   background-color: #003033;
   display: flex;
   flex-direction: column;
@@ -72,9 +72,9 @@ label {
   font-size: larger;
   margin: 1rem;
 }
-input {
+input, textarea {
   padding: 10px;
-  margin: 0 1rem 1rem 1rem;
+  margin: 5px;
   font-weight: 500;
   font-size: large;
   border-radius: 7px;
@@ -104,13 +104,14 @@ button {
 .container {
   display: flex;
   flex-direction: row;
-  flex-grow: 5;
-  flex-shrink: 5;
+  flex-wrap: wrap;
 }
 
 .products {
+  flex: 1 0 20vw;
   background-color: rgb(7, 17, 29);
-  width: 15vw;
+  min-width: 15vw;
+  max-width: 25vw;
   height: 35vh;
   display: flex;
   align-items: center;
@@ -144,7 +145,7 @@ button {
 }
 
 .button {
-  width : 30px;
+  /* width : 30px; */
   background-color: rgb(95, 95, 95);
   color: white;
   margin: 3px 8px;
@@ -156,4 +157,53 @@ button {
 .button:hover {
   background-color: #4a9691;
   color: #e4fc10;
+}
+
+/* this styles for product detail page */
+
+.productDetail {
+  width: 50vw;
+  background-color: #01666e;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-top : 20px;
+  margin-bottom: 20px;
+}
+
+.dimage {
+  width: 100%;
+  height: 70%;
+}
+
+.dtitle {
+  text-align: center;
+  color: white;
+  /* background-color: black; */
+  width: 100%;
+  padding : 5px 2px;
+  font-size: large;
+}
+
+
+/* below styles are for cart */
+
+
+.cartContainer {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.cartProducts {
+  flex: 1 0 20vw;
+  background-color: rgb(7, 17, 29);
+  width: 15vw;
+  height: 35vh;
+  display: flex;
+  align-items: center;
+  /* justify-content: center; */
+  flex-direction: column;
+  margin: 10px;
+  border-radius: 10px;
+  overflow: hidden;
 }

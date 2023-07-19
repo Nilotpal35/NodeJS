@@ -1,14 +1,18 @@
 // const products = [];
-
+const { v4: uuidv4 } = require("uuid");
 const { productDataModel } = require("../models/dataModel");
 
 exports.getAddProduct = (req, res, next) => {
-  res.render("AddProduct");
+  res.render("AddProduct", {
+    pageTitle: "Add Product",
+  });
 };
 
 exports.postAddProduct = (req, res, next) => {
-  const store = new productDataModel(req.body.product);
-  store.storeData();
+  const { title, imageUrl, price, description } = req.body;
+  const formData = { id: uuidv4(), title, imageUrl, price, description };
+  const store = new productDataModel();
+  store.storeData(formData);
   res.redirect("/products");
 };
 
@@ -27,7 +31,53 @@ exports.getProduct = (req, res, next) => {
   });
 };
 
-///OLDER APPROCHES FOR GETTING STORED DATA FROM data.json file
+exports.getProductDetails = (req, res, next) => {
+  const { prodId } = req.params;
+  const product = [];
+  productDataModel.getProduct(prodId, (fetchedData) => {
+    if (fetchedData) {
+      product.push(...fetchedData);
+    }
+    res.render("ProductDetail", {
+      pageTitle: "Product Detail",
+      prod: product,
+    });
+  });
+};
+
+exports.addCart = (req, res, next) => {
+  const { prodId } = req.params;
+  productDataModel.addCart(prodId);
+  res.redirect("/cart");
+};
+
+exports.getCart = (req, res, next) => {
+  const cartProducts = [];
+  productDataModel.getCartList((fetchedData) => {
+    if (fetchedData) {
+      const data = JSON.parse(fetchedData);
+      cartProducts.push(...data);
+    }
+    res.render("Cart", {
+      pageTitle: "Cart",
+      prods: cartProducts,
+    });
+  });
+};
+
+exports.deleteProduct = (req, res, next) => {
+  const { prodId } = req.params;
+  productDataModel.deleteProduct(prodId);
+  res.redirect("/products");
+};
+
+exports.deleteCart = (req, res, next) => {
+  const { prodId } = req.params;
+  productDataModel.deleteCart(prodId);
+  res.redirect("/cart");
+};
+
+///OLDER APPROCHES FOR GETTING  STORED DATA FROM data.json file
 
 //older approach
 // const fetchedData = [];

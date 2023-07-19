@@ -1,7 +1,11 @@
 exports.getHomePage = (req, res, next) => {
-  res.render("Home");
+  res.render("Home", {
+    pageTitle: "Home",
+  });
 };
 
 exports.getErrorPage = (req, res, next) => {
-  res.render("Error");
+  res.render("Error", {
+    pageTitle: "Error 404",
+  });
 };
