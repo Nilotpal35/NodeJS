@@ -12,24 +12,25 @@ html(lang="en")
                     li.header_li
                         a(href="/") HOME
                     li.header_li
-                        a.active(href="/admin/add-product") ADD-PRODUCT
+                        a(href="/admin/add-product") ADD-PRODUCT
                     li.header_li
-                        a(href="/products") PRODUCT
+                        a.active(href="/products") PRODUCT
                     li.header_li
                         a(href="/cart") CART
                     li.header_li
                         a(href="#") FAVOURITE
         div.main_div
-            h2.title Add Produt Form
-            form.form(action="/admin/add-product" , method="POST") 
+            h2.title Edit Produt Form
+            form.form(action="/admin/edit-product" , method="POST")
+                input(type="hidden", name="id" , value=product.id) 
                 label(for="title") Title 
-                input(type="text", name="title" , placeholder="title", required)
+                input(type="text", name="title" , placeholder="title" value=product.title, required)
                 label(for="imageUrl") Image
-                input(type="text", name="imageUrl" , placeholder="image", required)
+                input(type="text", name="imageUrl" , placeholder="image" value=product.imageUrl, required)
                 label(for="price") Price 
-                input(type="number", name="price" ,id="price",placeholder="price" step="0.01", required)
+                input(type="number", name="price" ,id="price",placeholder="price" step="0.01" value=product.price, required)
                 label(for="description") Description 
-                textarea(name="description", cols="20",id="description", rows="5" placeholder="description", required)
+                textarea(name="description", cols="20",id="description", rows="5" placeholder="description", required) #{product.description}
                 div.button-ctr
                     button(type="submit") Add 
                     button(type="reset") Reset

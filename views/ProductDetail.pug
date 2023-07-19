@@ -23,9 +23,12 @@ html(lang="en")
             div.container
                 each product in prod
                     div.productDetail
-                        img.dimage(src=product.imageUrl, alt=`#{${product}}`,)
+                        img.dimage(src=product.imageUrl, alt=`${product}`,)
                         p.dtitle #{product.title}
                         p.dtitle #{product.price}
                         p.dtitle #{product.description}
+                        form(action="/admin/edit", method="post") 
+                            input(type="hidden", name="prodId" , value=product.id)
+                            button.button(type="submit") Edit
         footer.main_footer
             p &copy; 2023 Nilotpal &reg; MIT License

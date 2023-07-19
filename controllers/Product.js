@@ -16,6 +16,27 @@ exports.postAddProduct = (req, res, next) => {
   res.redirect("/products");
 };
 
+exports.getEditProduct = (req, res, body) => {
+  const { prodId } = req.body;
+  const product = [];
+  productDataModel.getProduct(prodId, (fetchedData) => {
+    if (fetchedData) {
+      product.push(...fetchedData);
+    }
+    res.render("editProduct", {
+      pageTitle: "Edit Product",
+      product: product[0],
+    });
+  });
+};
+
+exports.postEditProduct = (req, res, next) => {
+  const { id, title, imageUrl, price, description } = req.body;
+  const formData = { id, title, imageUrl, price, description };
+  productDataModel.editProduct(formData);
+  res.redirect("/products");
+};
+
 exports.getProduct = (req, res, next) => {
   //new approach
   const products = [];
@@ -59,14 +80,13 @@ exports.getCart = (req, res, next) => {
       cartProducts.push(...data);
     }
     const totalPrice = cartProducts.reduce((acc, curr) => {
-      return (acc = (+acc) + (+curr.price));
+      return (acc = +acc + +curr.price);
     }, 0);
-    console.log("PRICE", totalPrice);
     res.render("Cart", {
       pageTitle: "Cart",
       prods: cartProducts,
       cartQty: cartProducts.length,
-      totalPrice : totalPrice,
+      totalPrice: totalPrice,
     });
   });
 };

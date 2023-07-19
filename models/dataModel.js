@@ -52,6 +52,53 @@ exports.productDataModel = class productData {
     readFunction(storePath, cb);
   }
 
+  //edit product data
+  static editProduct(formData) {
+    const products = [];
+    const cartProducts = [];
+    readFunction(storePath, (f) => {
+      if (f) {
+        //update in main product items
+        const productExist = JSON.parse(f)?.find(
+          (item) => item.id === formData.id
+        );
+        products.push(
+          ...JSON.parse(f).filter((item) => item.id !== formData.id)
+        );
+        if (productExist) {
+          products.push(formData);
+        }
+
+        //update in cart products
+        readFunction(cartPath, (F) => {
+          if (F) {
+            const productExist = JSON.parse(F)?.find(
+              (item) => item.id === formData.id
+            );
+            cartProducts.push(
+              ...JSON.parse(F).filter((item) => item.id !== formData.id)
+            );
+            console.log("BEFORE EDIT", cartProducts);
+            if (productExist) {
+              cartProducts.push(formData);
+            }
+            console.log("AFTER EDIT", cartProducts);
+          }
+          writeFile(cartPath, JSON.stringify(cartProducts), (err) => {
+            if (err) {
+              console.log("Error in udating cart products");
+            }
+          });
+        });
+      }
+      writeFile(storePath, JSON.stringify(products), (err) => {
+        if (err) {
+          console.log("error in editing main products");
+        }
+      });
+    });
+  }
+
   //get individual product data from data.json file
   static getProduct(prodId, cb) {
     const product = [];

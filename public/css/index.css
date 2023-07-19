@@ -164,6 +164,7 @@ button {
 
 .productDetail {
   width: 50vw;
+  /* height: 70vw; */
   background-color: #01666e;
   border-radius: 10px;
   overflow: hidden;
@@ -173,7 +174,7 @@ button {
 
 .dimage {
   width: 100%;
-  height: 70%;
+  height: 60vh;
 }
 
 .dtitle {
