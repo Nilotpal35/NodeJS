@@ -48,13 +48,14 @@ a {
 }
 
 .main_div {
-  height: 82vh;
+  min-height: 82vh;
   background-color: rgb(6, 60, 66);
   color: rgb(221, 221, 221);
   display: flex;
   flex-direction: column;
   align-items: center;
   /* justify-content: center; */
+  bottom : 0
 }
 
 .form {
@@ -92,6 +93,7 @@ button {
   border-radius: 5px;
 }
 .main_footer {
+  position: relative;
   background-color: #1c736d;
   height: 8vh;
   color: white;
@@ -99,6 +101,8 @@ button {
   display: flex;
   justify-content: center;
   align-items: center;
+  /* width: 100%; */
+  bottom: 0;
 }
 
 .container {
@@ -131,8 +135,8 @@ button {
 .title {
   text-align: center;
   color: white;
-  background-color: black;
-  width: 100%;
+  /* background-color: black; */
+  /* width: 100%; */
   padding : 5px 2px;
 }
 
