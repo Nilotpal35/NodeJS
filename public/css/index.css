@@ -48,7 +48,7 @@ a {
 }
 
 .main_div {
-  min-height: 82vh;
+  height: 82vh;
   background-color: rgb(6, 60, 66);
   color: rgb(221, 221, 221);
   display: flex;
@@ -203,7 +203,8 @@ button {
 .cartProducts {
   flex: 1 0 20vw;
   background-color: rgb(7, 17, 29);
-  width: 15vw;
+  min-width: 15vw;
+  max-width: 25vw;
   height: 35vh;
   display: flex;
   align-items: center;

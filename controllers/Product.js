@@ -86,7 +86,7 @@ exports.getCart = (req, res, next) => {
       pageTitle: "Cart",
       prods: cartProducts,
       cartQty: cartProducts.length,
-      totalPrice: totalPrice,
+      totalPrice: totalPrice.toFixed(2),
     });
   });
 };
