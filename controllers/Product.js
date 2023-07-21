@@ -15,6 +15,7 @@ exports.postAddProduct = (req, res, next) => {
   const formData = { id: uuidv4(), title, imageUrl, price, description };
   const storeDb = new newDataModel();
   storeDb.store(formData);
+  res.redirect("/products");
 };
 
 //old way
@@ -97,33 +98,50 @@ exports.getProductDetails = (req, res, next) => {
 
 exports.addCart = (req, res, next) => {
   const { prodId } = req.body;
-  console.log("cart", prodId);
-  //productDataModel.addCart(prodId);
+  console.log("CART ID", prodId);
+  newDataModel.addCart(prodId);
   res.redirect("/products");
 };
 
+//new way of getting cart items
 exports.getCart = (req, res, next) => {
   const cartProducts = [];
-  productDataModel.getCartList((fetchedData) => {
-    if (fetchedData) {
-      const data = JSON.parse(fetchedData);
-      cartProducts.push(...data);
-    }
-    const totalPrice = cartProducts.reduce((acc, curr) => {
-      return (acc = +acc + +curr.price);
-    }, 0);
-    res.render("Cart", {
-      pageTitle: "Cart",
-      prods: cartProducts,
-      cartQty: cartProducts.length,
-      totalPrice: totalPrice,
-    });
+  //newDataModel.getCart();
+  // const totalPrice = cartProducts.reduce((acc, curr) => {
+  //   return (acc = +acc + +curr.price);
+  // }, 0);
+  res.render("Cart", {
+    pageTitle: "Cart",
+    prods: cartProducts,
+    cartQty: cartProducts.length,
+    totalPrice: 0,
   });
 };
 
+//old way of getting cart items
+// exports.getCart = (req, res, next) => {
+//   const cartProducts = [];
+//   productDataModel.getCartList((fetchedData) => {
+//     if (fetchedData) {
+//       const data = JSON.parse(fetchedData);
+//       cartProducts.push(...data);
+//     }
+//     const totalPrice = cartProducts.reduce((acc, curr) => {
+//       return (acc = +acc + +curr.price);
+//     }, 0);
+//     res.render("Cart", {
+//       pageTitle: "Cart",
+//       prods: cartProducts,
+//       cartQty: cartProducts.length,
+//       totalPrice: totalPrice,
+//     });
+//   });
+// };
+
 exports.deleteProduct = (req, res, next) => {
   const { prodId } = req.body;
-  productDataModel.deleteProduct(prodId);
+  console.log("DELETE PRODUCT", prodId);
+  newDataModel.deleteData(prodId);
   res.redirect("/products");
 };
 

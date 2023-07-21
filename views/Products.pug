@@ -28,10 +28,10 @@ html(lang="en")
                         p.title #{product.title}
                         div.btnCtr
                             form(action="/cart/add-cart", method="post") 
-                                input(type="hidden", name="prodId" , value=`${product.id}`)
+                                input(type="hidden", name="prodId" , value=`${product._id}`)
                                 button.button(type="submit") Add
                             form(action="/products/delete", method="post")
-                                input(type="hidden", name="prodId" , value=`${product.id}`)
+                                input(type="hidden", name="prodId" , value=`${product._id}`)
                                 button.button(type="submit") Delete
                             form(action="/product-detail", method="post")
                                 input(type="hidden", name="prodId" , value=`${product._id}`)

@@ -54,6 +54,60 @@ class newDataModel {
         throw err;
       });
   }
+
+  static deleteData(_id) {
+    const db = getDb();
+    db.collection("product")
+      .deleteOne({ _id: new ObjectId(_id) })
+      // .then((res) => {
+      //   console.log("Deleted Successfully!", res);
+      // })
+      .catch((err) => {
+        throw err;
+      });
+  }
+
+  static addCart(prodId) {
+    const cartItems = [];
+    cartItems.push(prodId);
+    const db = getDb();
+    db.collection("cart")
+      .insertOne({ cartItems })
+      .then((res) => {
+        console.log("Item added into cart!", res);
+      })
+      .catch((err) => {
+        throw err;
+      });
+  }
+
+  // static getCart() {
+  //   const cartItems = [];
+  //   const carts = [];
+  //   const db = getDb();
+  //   db.collection("cart")
+  //     .find()
+  //     .next()
+  //     .then((res) => {
+  //       console.log("RESPONSE FROM CART", res);
+  //       res.cartItems.map((item) => {
+  //         db.collection("product")
+  //           .find({ _id: new ObjectId(item) })
+  //           .next()
+  //           // .then((res2) => {
+  //           //   console.log("response from product", res2);
+  //           //   carts.push(res2);
+  //           // })
+  //           .catch((err2) => {
+  //             throw err2;
+  //           });
+  //       });
+  //     })
+  //     .catch((err) => {
+  //       throw err;
+  //     });
+  //   // cb(carts);
+  // }
 }
 
 exports.newDataModel = newDataModel;

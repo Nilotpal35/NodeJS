@@ -7,6 +7,7 @@ const body_parser = require("body-parser");
 const { getErrorPage } = require("./controllers/utility");
 
 const { MongoConnect } = require("./util/database");
+const userDataModel = require("./models/userDataModel");
 
 const app = express();
 
@@ -15,6 +16,18 @@ app.set("view engine", "pug");
 app.use(body_parser.urlencoded({ extended: false }));
 
 app.use(express.static("public"));
+
+app.use((req, res, next) => {
+  const user = new userDataModel();
+  user.getUserById("64ba74e4a34824d578ad980c", (result) => {
+    console.log("USER AUTH", result);
+    if (result) {
+      next();
+    } else {
+      res.render("Error");
+    }
+  });
+});
 
 app.use("/admin", adminRoute.admin);
 
