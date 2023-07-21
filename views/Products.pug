@@ -34,7 +34,7 @@ html(lang="en")
                                 input(type="hidden", name="prodId" , value=`${product.id}`)
                                 button.button(type="submit") Delete
                             form(action="/product-detail", method="post")
-                                input(type="hidden", name="prodId" , value=`${product.id}`)
+                                input(type="hidden", name="prodId" , value=`${product._id}`)
                                 button.button(type="submit") Details
         footer.main_footer
             p &copy; 2023 Nilotpal &reg; MIT License

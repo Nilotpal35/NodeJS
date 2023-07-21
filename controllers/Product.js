@@ -1,6 +1,7 @@
 // const products = [];
 const { v4: uuidv4 } = require("uuid");
 const { productDataModel } = require("../models/dataModel");
+const { newDataModel } = require("../models/cloudDataModel");
 
 exports.getAddProduct = (req, res, next) => {
   res.render("AddProduct", {
@@ -8,20 +9,29 @@ exports.getAddProduct = (req, res, next) => {
   });
 };
 
+//new way using mongo db;
 exports.postAddProduct = (req, res, next) => {
   const { title, imageUrl, price, description } = req.body;
   const formData = { id: uuidv4(), title, imageUrl, price, description };
-  const store = new productDataModel();
-  store.storeData(formData);
-  res.redirect("/products");
+  const storeDb = new newDataModel();
+  storeDb.store(formData);
 };
+
+//old way
+// exports.postAddProduct = (req, res, next) => {
+//   const { title, imageUrl, price, description } = req.body;
+//   const formData = { id: uuidv4(), title, imageUrl, price, description };
+//   const store = new productDataModel();
+//   store.storeData(formData);
+//   res.redirect("/products");
+// };
 
 exports.getEditProduct = (req, res, body) => {
   const { prodId } = req.body;
   const product = [];
-  productDataModel.getProduct(prodId, (fetchedData) => {
+  newDataModel.getDetails(prodId, (fetchedData) => {
     if (fetchedData) {
-      product.push(...fetchedData);
+      product.push(fetchedData);
     }
     res.render("editProduct", {
       pageTitle: "Edit Product",
@@ -31,19 +41,21 @@ exports.getEditProduct = (req, res, body) => {
 };
 
 exports.postEditProduct = (req, res, next) => {
-  const { id, title, imageUrl, price, description } = req.body;
+  const { _id, id, title, imageUrl, price, description } = req.body;
   const formData = { id, title, imageUrl, price, description };
-  productDataModel.editProduct(formData);
+  newDataModel.editData(_id, formData);
   res.redirect("/products");
 };
+
+//new way by using mongo db
 
 exports.getProduct = (req, res, next) => {
   //new approach
   const products = [];
-  productDataModel.getData((fetchedData) => {
+  newDataModel.getData((fetchedData) => {
     if (fetchedData) {
-      const data = JSON.parse(fetchedData);
-      products.push(...data);
+      console.log("fetcheddata", fetchedData);
+      products.push(...fetchedData);
     }
     res.render("Products", {
       pageTitle: "ProductPost",
@@ -52,12 +64,29 @@ exports.getProduct = (req, res, next) => {
   });
 };
 
+//old way by using file
+// exports.getProduct = (req, res, next) => {
+//   //new approach
+//   const products = [];
+//   productDataModel.getData((fetchedData) => {
+//     if (fetchedData) {
+//       const data = JSON.parse(fetchedData);
+//       products.push(...data);
+//     }
+//     res.render("Products", {
+//       pageTitle: "ProductPost",
+//       prods: products,
+//     });
+//   });
+// };
+
 exports.getProductDetails = (req, res, next) => {
   const { prodId } = req.body;
+  console.log("DETAILS", prodId);
   const product = [];
-  productDataModel.getProduct(prodId, (fetchedData) => {
+  newDataModel.getDetails(prodId, (fetchedData) => {
     if (fetchedData) {
-      product.push(...fetchedData);
+      product.push(fetchedData);
     }
     res.render("ProductDetail", {
       pageTitle: "Product Detail",
@@ -68,8 +97,9 @@ exports.getProductDetails = (req, res, next) => {
 
 exports.addCart = (req, res, next) => {
   const { prodId } = req.body;
-  productDataModel.addCart(prodId);
-  res.redirect("/cart");
+  console.log("cart", prodId);
+  //productDataModel.addCart(prodId);
+  res.redirect("/products");
 };
 
 exports.getCart = (req, res, next) => {

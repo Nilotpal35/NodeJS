@@ -6,6 +6,8 @@ const express = require("express");
 const body_parser = require("body-parser");
 const { getErrorPage } = require("./controllers/utility");
 
+const { MongoConnect } = require("./util/database");
+
 const app = express();
 
 app.set("view engine", "pug");
@@ -26,4 +28,6 @@ app.use("/", homeRoute);
 
 app.use(getErrorPage);
 
-app.listen(8080);
+MongoConnect(() => {
+  app.listen(8080);
+});

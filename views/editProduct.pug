@@ -22,6 +22,7 @@ html(lang="en")
         div.main_div
             h2.title Edit Produt Form
             form.form(action="/admin/edit-product" , method="POST")
+                input(type="hidden", name="_id" , value=product._id) 
                 input(type="hidden", name="id" , value=product.id) 
                 label(for="title") Title 
                 input(type="text", name="title" , placeholder="title" value=product.title, required)
@@ -32,7 +33,7 @@ html(lang="en")
                 label(for="description") Description 
                 textarea(name="description", cols="20",id="description", rows="5" placeholder="description", required) #{product.description}
                 div.button-ctr
-                    button(type="submit") Add 
+                    button(type="submit") Save 
                     button(type="reset") Reset
         footer.main_footer
             p &copy; 2023 Nilotpal &reg; MIT License
