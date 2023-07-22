@@ -18,10 +18,10 @@ app.use(body_parser.urlencoded({ extended: false }));
 app.use(express.static("public"));
 
 app.use((req, res, next) => {
-  const user = new userDataModel();
-  user.getUserById("64ba74e4a34824d578ad980c", (result) => {
-    console.log("USER AUTH", result);
+  userDataModel.getUserById("64ba74e4a34824d578ad980c", (result) => {
     if (result) {
+      console.log("USER AUTHENTICATED", result);
+      req.user = result;
       next();
     } else {
       res.render("Error");

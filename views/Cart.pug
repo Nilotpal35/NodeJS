@@ -31,10 +31,10 @@ html(lang="en")
                         div.btnCtr
                             a.button(href="#") Checkout 
                             form(action="/cart/delete", method="post")
-                                input(type="hidden", name="prodId" , value=`${product.id}`)
-                                button.button(type="submit") Delete
+                                input(type="hidden", name="prodId" , value=`${product._id}`)
+                                button.button(type="submit") Remove from cart
                             form(action="/product-detail", method="post")
-                                input(type="hidden", name="prodId" , value=`${product.id}`)
+                                input(type="hidden", name="prodId" , value=`${product._id}`)
                                 button.button(type="submit") Details
         footer.main_footer
             p &copy; 2023 Nilotpal &reg; MIT License

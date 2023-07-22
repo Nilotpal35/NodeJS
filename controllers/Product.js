@@ -2,6 +2,8 @@
 const { v4: uuidv4 } = require("uuid");
 const { productDataModel } = require("../models/dataModel");
 const { newDataModel } = require("../models/cloudDataModel");
+const userDataModel = require("../models/userDataModel");
+const { ObjectId } = require("mongodb");
 
 exports.getAddProduct = (req, res, next) => {
   res.render("AddProduct", {
@@ -55,7 +57,6 @@ exports.getProduct = (req, res, next) => {
   const products = [];
   newDataModel.getData((fetchedData) => {
     if (fetchedData) {
-      console.log("fetcheddata", fetchedData);
       products.push(...fetchedData);
     }
     res.render("Products", {
@@ -96,25 +97,34 @@ exports.getProductDetails = (req, res, next) => {
   });
 };
 
-exports.addCart = (req, res, next) => {
+exports.addCart = async (req, res, next) => {
   const { prodId } = req.body;
-  console.log("CART ID", prodId);
-  newDataModel.addCart(prodId);
-  res.redirect("/products");
+  const userData = req.user;
+  userData.cart.push(prodId);
+  userDataModel.addCart(userData);
+  res.redirect("/cart");
 };
 
 //new way of getting cart items
 exports.getCart = (req, res, next) => {
-  const cartProducts = [];
-  //newDataModel.getCart();
-  // const totalPrice = cartProducts.reduce((acc, curr) => {
-  //   return (acc = +acc + +curr.price);
-  // }, 0);
-  res.render("Cart", {
-    pageTitle: "Cart",
-    prods: cartProducts,
-    cartQty: cartProducts.length,
-    totalPrice: 0,
+  const user = req.user;
+  const cartItems = user.cart.map((item) => {
+    if (item) {
+      return new ObjectId(item);
+    }
+  });
+  console.log("cart items", cartItems);
+  userDataModel.getCart(cartItems, (fetchedCart) => {
+    const totalPrice = fetchedCart.reduce((acc, cur) => {
+      return (acc = +acc + +cur.price);
+    }, 0);
+    console.log("TOTAL PRICE", totalPrice);
+    res.render("Cart", {
+      pageTitle: "Cart",
+      prods: fetchedCart,
+      cartQty: fetchedCart.length,
+      totalPrice: totalPrice,
+    });
   });
 };
 
@@ -147,9 +157,19 @@ exports.deleteProduct = (req, res, next) => {
 
 exports.deleteCart = (req, res, next) => {
   const { prodId } = req.body;
-  productDataModel.deleteCart(prodId);
+  const userData = req.user;
+  userData.cart = userData.cart.filter((item) => item !== prodId);
+  userDataModel.removeCart(userData);
   res.redirect("/cart");
 };
+
+// exports.deleteCart = (req, res, next) => {
+//   const { prodId } = req.body;
+//   newDataModel.updateCart(prodId, false);
+//   setTimeout(() => {
+//     res.redirect("/cart");
+//   }, 1000);
+// };
 
 ///OLDER APPROCHES FOR GETTING  STORED DATA FROM data.json file
 

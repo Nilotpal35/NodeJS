@@ -67,46 +67,46 @@ class newDataModel {
       });
   }
 
-  static addCart(prodId) {
-    const cartItems = [];
-    cartItems.push(prodId);
+  static updateCart(prodId, action) {
     const db = getDb();
-    db.collection("cart")
-      .insertOne({ cartItems })
+    db.collection("product")
+      .findOne({ _id: new ObjectId(prodId) })
       .then((res) => {
         console.log("Item added into cart!", res);
+        db.collection("product")
+          .updateOne(
+            { _id: new ObjectId(prodId) },
+            { $set: { ...res, cart: action } }
+          )
+          .then((res2) => {
+            console.log("succesfully updated", res2);
+          })
+          .catch((err2) => {
+            throw err2;
+          });
       })
       .catch((err) => {
         throw err;
       });
   }
 
-  // static getCart() {
-  //   const cartItems = [];
-  //   const carts = [];
+  static getCart(cb) {
+    const db = getDb();
+    db.collection("product")
+      .find({ cart: true })
+      .toArray()
+      .then((res) => {
+        console.log("CART PRODUCTS", res);
+        cb(res);
+      })
+      .catch((err) => {
+        throw err;
+      });
+  }
+
+  // static deleteCart(prodId) {
   //   const db = getDb();
-  //   db.collection("cart")
-  //     .find()
-  //     .next()
-  //     .then((res) => {
-  //       console.log("RESPONSE FROM CART", res);
-  //       res.cartItems.map((item) => {
-  //         db.collection("product")
-  //           .find({ _id: new ObjectId(item) })
-  //           .next()
-  //           // .then((res2) => {
-  //           //   console.log("response from product", res2);
-  //           //   carts.push(res2);
-  //           // })
-  //           .catch((err2) => {
-  //             throw err2;
-  //           });
-  //       });
-  //     })
-  //     .catch((err) => {
-  //       throw err;
-  //     });
-  //   // cb(carts);
+  //   db.collection('product').
   // }
 }
 

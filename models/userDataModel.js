@@ -14,13 +14,55 @@ class userDataModel {
       });
   }
 
-  getUserById(userId, cb) {
+  static getUserById(userId, cb) {
     const db = getDb();
     db.collection("user")
       .findOne({ _id: new ObjectId(userId) })
       .then((res) => {
-        console.log("USER FOUND", res);
         cb(res);
+      })
+      .catch((err) => {
+        throw err;
+      });
+  }
+
+  static addCart(updatedData) {
+    const db = getDb();
+    db.collection("user")
+      .updateOne(
+        { _id: new ObjectId(updatedData._id) },
+        { $set: { cart: updatedData.cart } }
+      )
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        throw err;
+      });
+  }
+
+  static getCart(cartitems, cb) {
+    const db = getDb();
+    db.collection("product")
+      .find({ _id: { $in: cartitems } })
+      .toArray()
+      .then((res) => {
+        cb(res);
+      })
+      .catch((err) => {
+        throw err;
+      });
+  }
+
+  static removeCart(updatedUserData) {
+    const db = getDb();
+    db.collection("user")
+      .updateOne(
+        { _id: new ObjectId(updatedUserData._id) },
+        { $set: { cart: updatedUserData.cart } }
+      )
+      .then((res) => {
+        console.log("Cart item removed successfully", res);
       })
       .catch((err) => {
         throw err;
