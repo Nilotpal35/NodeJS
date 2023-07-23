@@ -31,7 +31,7 @@ class userDataModel {
     db.collection("user")
       .updateOne(
         { _id: new ObjectId(updatedData._id) },
-        { $set: { cart: updatedData.cart } }
+        { $set: { ...updatedData } }
       )
       .then((res) => {
         console.log(res);
@@ -59,7 +59,7 @@ class userDataModel {
     db.collection("user")
       .updateOne(
         { _id: new ObjectId(updatedUserData._id) },
-        { $set: { cart: updatedUserData.cart } }
+        { $set: { ...updatedUserData } }
       )
       .then((res) => {
         console.log("Cart item removed successfully", res);
