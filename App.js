@@ -8,6 +8,7 @@ const { getErrorPage } = require("./controllers/utility");
 
 const { MongoConnect } = require("./util/database");
 const userDataModel = require("./models/userDataModel");
+const { orderRoute } = require("./routes/order");
 
 const app = express();
 
@@ -36,6 +37,8 @@ app.use("/products", shopRoute);
 app.use("/product-detail", shopRoute);
 
 app.use("/cart", cartRoute);
+
+app.use("/order", orderRoute);
 
 app.use("/", homeRoute);
 

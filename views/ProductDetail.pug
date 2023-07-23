@@ -18,7 +18,7 @@ html(lang="en")
                     li.header_li
                         a(href="/cart") CART
                     li.header_li
-                        a(href="#") FAVOURITE
+                        a(href="/order") ORDER
         div.main_div
             div.container
                 each product in prod
@@ -29,6 +29,6 @@ html(lang="en")
                         p.dtitle #{product.description}
                         form(action="/admin/edit", method="post") 
                             input(type="hidden", name="prodId" , value=product._id)
-                            button.button(type="submit") Edit
+                            button.cartButton(type="submit") Edit
         footer.main_footer
             p &copy; 2023 Nilotpal &reg; MIT License

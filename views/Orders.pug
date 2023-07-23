@@ -10,7 +10,7 @@ html(lang="en")
             nav.header_nav
                 ul.header_ul
                     li.header_li
-                        a.active(href="/") HOME
+                        a(href="/") HOME
                     li.header_li
                         a(href="/admin/add-product") ADD-PRODUCT
                     li.header_li
@@ -18,8 +18,8 @@ html(lang="en")
                     li.header_li
                         a(href="/cart") CART
                     li.header_li
-                        a(href="/order") ORDER
+                        a.active(href="/order") ORDER
         div.main_div
-            h1 This is Home page
+            h1 This is #{pageTitle} order page
         footer.main_footer
             p &copy; 2023 Nilotpal &reg; MIT License

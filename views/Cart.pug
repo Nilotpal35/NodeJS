@@ -18,7 +18,7 @@ html(lang="en")
                     li.header_li
                         a.active(href="/cart") CART
                     li.header_li
-                        a(href="#") FAVOURITE
+                        a(href="/order") ORDER
         div.main_div
             div.cartHeader
                 h2 Total items x #{cartQty} -
@@ -26,15 +26,19 @@ html(lang="en")
             div.cartContainer
                 each product in prods
                     div.cartProducts
-                        img.image(src=product.imageUrl, alt=`#{${product}}`,)
-                        p.title #{product.title}
-                        div.btnCtr
-                            a.button(href="#") Checkout 
+                        img.cartImage(src=product.imageUrl, alt=`${product.title}`,)
+                        p.cartTitle #{product.title} X 1 
+                        div.cartBtnCtr
                             form(action="/cart/delete", method="post")
-                                input(type="hidden", name="prodId" , value=`${product._id}`)
-                                button.button(type="submit") Remove from cart
+                                input(type="hidden", name="prod" , value=`${product._id}`)
+                                button.cartButton(type="submit") Remove
                             form(action="/product-detail", method="post")
                                 input(type="hidden", name="prodId" , value=`${product._id}`)
-                                button.button(type="submit") Details
+                                button.cartButton(type="submit") Details
+            div.hr
+            div.order
+                form(action="/order", method="post")
+                    input(type="hidden", name="prods", value=`${prods}`) 
+                    button.orderButton Order Now
         footer.main_footer
             p &copy; 2023 Nilotpal &reg; MIT License

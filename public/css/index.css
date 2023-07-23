@@ -49,7 +49,7 @@ a {
 
 .main_div {
   min-height: 82vh;
-  background-color: rgb(6, 60, 66);
+  background-color: rgb(208, 208, 208);
   color: rgb(221, 221, 221);
   display: flex;
   flex-direction: column;
@@ -196,30 +196,90 @@ button {
 
 .cartContainer {
   display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
+  flex-direction: column;
+  /* flex-wrap: wrap; */
 }
 
 .cartProducts {
-  flex: 1 0 20vw;
-  background-color: rgb(7, 17, 29);
-  width: 15vw;
-  height: 35vh;
+  /* flex: 1 0 20vw; */
   display: flex;
+  flex-direction: row;
+  background-color: rgb(7, 38, 70);
+  width: 70vw;
+  height: 15vh;
   align-items: center;
-  /* justify-content: center; */
-  flex-direction: column;
+  justify-content: space-between;
   margin: 10px;
   border-radius: 10px;
   overflow: hidden;
 }
-
+.cartImage {
+  height: 100%;
+  width : 15vw;
+}
 
 .cartHeader {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   width: 30vw;
-  background-color: #063715;
+  background-color: #012321;
   padding: 1rem;
+  margin-bottom: 1rem;
+  border-radius: 8px;
+}
+
+.cartBtnCtr {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* height: 50px; */
+  /* justify-content: space-around; */
+  /* width: 100%; */
+}
+
+.cartButton{
+  width : 70px;
+  background-color: rgb(95, 95, 95);
+  color: white;
+  margin: 3px 8px;
+  padding: 8px;
+  border-radius: 5px;
+  text-align: center;
+  border-style: none;
+}
+
+.cartButton:hover {
+  background-color: #4a9691;
+  color: #e4fc10;
+}
+
+.cartTitle {
+  font-size: 1.5rem;
+}
+
+.hr {
+  /* border-top-width: 5px; */
+  background-color: rgb(4, 40, 36);
+  height: 2px;
+  width: 90vw;
+  border-radius: 2px;
+  margin: 15px;
+}
+
+.orderButton {
+  background-color: rgb(96, 8, 62);
+  color: white;
+  margin: 10px;
+  margin-bottom: 1.8rem;
+  padding: 12px;
+  border-radius: 5px;
+  text-align: center;
+  border-style: none;
+  font-size: 1rem;
+}
+
+.orderButton:hover {
+  background-color: #4a9691;
+  color: #e4fc10;
 }
