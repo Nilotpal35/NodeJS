@@ -14,6 +14,7 @@
   height: 100%;
   display: flex;
   align-items: center;
+  justify-content: space-between;
 }
 
 .header_ul {
@@ -27,6 +28,15 @@
   padding: 8px;
   border-radius: 8px;
   background-color: #004e49; */
+}
+
+.user {
+  background-color: rgb(9, 40, 71);
+  font-size: 1rem;
+  margin: 1rem;
+  padding: 10px;
+  border-radius: 5px;
+  color: rgb(247, 247, 247)
 }
 
 a:active,
@@ -105,6 +115,10 @@ button {
   bottom: 0;
 }
 
+.main_title {
+  color: #300833;
+}
+
 .container {
   display: flex;
   flex-direction: row;
@@ -134,7 +148,7 @@ button {
 
 .title {
   text-align: center;
-  color: white;
+  color: rgb(96, 96, 96);
   /* background-color: black; */
   /* width: 100%; */
   padding : 5px 2px;
@@ -283,3 +297,4 @@ button {
   background-color: #4a9691;
   color: #e4fc10;
 }
+

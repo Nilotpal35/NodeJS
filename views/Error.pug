@@ -19,7 +19,11 @@ html(lang="en")
                         a(href="/cart") CART
                     li.header_li
                         a(href="/order") ORDER
+                div.user #{user}
         div.main_div
-            h1 Page not found!
+            if error 
+                h1.title #{error}
+            else 
+                h1.title Page not found!
         footer.main_footer
             p &copy; 2023 Nilotpal &reg; MIT License

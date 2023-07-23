@@ -41,13 +41,13 @@ class userDataModel {
       });
   }
 
-  static getCart(cartitems, cb) {
+  static getCart(cartitems) {
     const db = getDb();
-    db.collection("product")
+    return db.collection("product")
       .find({ _id: { $in: cartitems } })
       .toArray()
       .then((res) => {
-        cb(res);
+        return res
       })
       .catch((err) => {
         throw err;

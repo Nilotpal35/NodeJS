@@ -19,6 +19,7 @@ html(lang="en")
                         a(href="/cart") CART
                     li.header_li
                         a(href="/order") ORDER
+                div.user #{user.toUpperCase()}
         div.main_div
             h2.title Add Produt Form
             form.form(action="/admin/add-product" , method="POST") 

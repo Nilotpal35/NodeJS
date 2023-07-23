@@ -8,6 +8,7 @@ const { ObjectId } = require("mongodb");
 exports.getAddProduct = (req, res, next) => {
   res.render("AddProduct", {
     pageTitle: "Add Product",
+    user : req.user?.name
   });
 };
 
@@ -39,6 +40,7 @@ exports.getEditProduct = (req, res, body) => {
     res.render("editProduct", {
       pageTitle: "Edit Product",
       product: product[0],
+      user : req.user?.name
     });
   });
 };
@@ -62,6 +64,7 @@ exports.getProduct = (req, res, next) => {
     res.render("Products", {
       pageTitle: "ProductPost",
       prods: products,
+      user : req.user?.name
     });
   });
 };
@@ -93,6 +96,7 @@ exports.getProductDetails = (req, res, next) => {
     res.render("ProductDetail", {
       pageTitle: "Product Detail",
       prod: product,
+      user : req.user?.name
     });
   });
 };
@@ -108,24 +112,43 @@ exports.addCart = async (req, res, next) => {
 //new way of getting cart items
 exports.getCart = (req, res, next) => {
   const user = req.user;
+  console.log("cart items", user);
   const cartItems = user.cart.map((item) => {
     if (item) {
       return new ObjectId(item);
     }
   });
   console.log("cart items", cartItems);
-  userDataModel.getCart(cartItems, (fetchedCart) => {
-    const totalPrice = fetchedCart.reduce((acc, cur) => {
-      return (acc = +acc + +cur.price);
-    }, 0);
-    console.log("TOTAL PRICE", totalPrice);
-    res.render("Cart", {
-      pageTitle: "Cart",
-      prods: fetchedCart,
-      cartQty: fetchedCart.length,
-      totalPrice: totalPrice,
+  userDataModel
+    .getCart(cartItems)
+    .then((fetchedCart) => {
+      const totalPrice = fetchedCart.reduce((acc, cur) => {
+        return (acc = +acc + +cur.price);
+      }, 0);
+      res.render("Cart", {
+        pageTitle: "Cart",
+        prods: fetchedCart,
+        cartQty: fetchedCart.length,
+        totalPrice: totalPrice,
+        user : req.user?.name
+      });
+    })
+    .catch((err) => {
+      throw err;
     });
-  });
+  // userDataModel.getCart(cartItems, (fetchedCart) => {
+  //   const totalPrice = fetchedCart.reduce((acc, cur) => {
+  //     return (acc = +acc + +cur.price);
+  //   }, 0);
+  //   console.log("TOTAL PRICE", fetchedCart,totalPrice);
+
+  //   res.render("Cart", {
+  //     pageTitle: "Cart",
+  //     prods: fetchedCart,
+  //     cartQty: fetchedCart.length,
+  //     totalPrice: totalPrice,
+  //   });
+  // });
 };
 
 //old way of getting cart items

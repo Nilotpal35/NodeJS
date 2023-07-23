@@ -19,6 +19,7 @@ html(lang="en")
                         a.active(href="/cart") CART
                     li.header_li
                         a(href="/order") ORDER
+                div.user #{user}
         div.main_div
             div.cartHeader
                 h2 Total items x #{cartQty} -
@@ -30,7 +31,7 @@ html(lang="en")
                         p.cartTitle #{product.title} X 1 
                         div.cartBtnCtr
                             form(action="/cart/delete", method="post")
-                                input(type="hidden", name="prod" , value=`${product._id}`)
+                                input(type="hidden", name="prodId" , value=`${product._id}`)
                                 button.cartButton(type="submit") Remove
                             form(action="/product-detail", method="post")
                                 input(type="hidden", name="prodId" , value=`${product._id}`)
@@ -38,7 +39,8 @@ html(lang="en")
             div.hr
             div.order
                 form(action="/order", method="post")
-                    input(type="hidden", name="prods", value=`${prods}`) 
+                    input(type="hidden", name="prods", value=`${prods}`)
+                    //- if(prods.length > 0) 
                     button.orderButton Order Now
         footer.main_footer
             p &copy; 2023 Nilotpal &reg; MIT License
