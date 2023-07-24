@@ -2,12 +2,27 @@ const { ObjectId } = require("mongodb");
 const { getDb } = require("../util/database");
 
 class userDataModel {
-  newUser(formData) {
+  static newUser(formData) {
     const db = getDb();
-    db.collection("user")
+    return db
+      .collection("user")
       .insertOne(formData)
       .then((res) => {
         console.log("User response", res);
+        return res;
+      })
+      .catch((err) => {
+        throw err;
+      });
+  }
+
+  static getUserByEmail(email) {
+    const db = getDb();
+    return db
+      .collection("user")
+      .findOne({ email: email })
+      .then((res) => {
+        return res;
       })
       .catch((err) => {
         throw err;
@@ -16,14 +31,16 @@ class userDataModel {
 
   static getUserById(userId, cb) {
     const db = getDb();
-    db.collection("user")
-      .findOne({ _id: new ObjectId(userId) })
-      .then((res) => {
-        cb(res);
-      })
-      .catch((err) => {
-        throw err;
-      });
+    if (userId) {
+      db.collection("user")
+        .findOne({ _id: new ObjectId(userId) })
+        .then((res) => {
+          cb(res);
+        })
+        .catch((err) => {
+          throw err;
+        });
+    }
   }
 
   static addCart(updatedData) {
@@ -43,11 +60,12 @@ class userDataModel {
 
   static getCart(cartitems) {
     const db = getDb();
-    return db.collection("product")
+    return db
+      .collection("product")
       .find({ _id: { $in: cartitems } })
       .toArray()
       .then((res) => {
-        return res
+        return res;
       })
       .catch((err) => {
         throw err;

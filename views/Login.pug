@@ -19,15 +19,14 @@ html(lang="en")
                         a(href="/cart") CART
                     li.header_li
                         a(href="/order") ORDER
-                div.user
-                    if isAuth 
-                        p #{user}
-                    else 
-                        a(href="/login") Login
         div.main_div
-            if error 
-                h1.title #{error}
-            else 
-                h1.title Page not found!
+            h2.title Login
+            form.form(action="/login" , method="POST") 
+                label(for="email") Email 
+                input(type="email", name="email" , placeholder="email", required)
+                label(for="password") Password
+                input(type="password", name="password" , placeholder="password", required)
+                div.button-ctr
+                    button(type="submit") Login 
         footer.main_footer
             p &copy; 2023 Nilotpal &reg; MIT License

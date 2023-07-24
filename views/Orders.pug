@@ -19,7 +19,11 @@ html(lang="en")
                         a(href="/cart") CART
                     li.header_li
                         a.active(href="/order") ORDER
-                div.user #{user}
+                div.user
+                    if isAuth 
+                        p #{user}
+                    else 
+                        a(href="/login") Login
         div.main_div
             //- h1.title This is #{pageTitle} order page
             div.cartContainer

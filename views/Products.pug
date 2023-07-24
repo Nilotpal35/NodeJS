@@ -19,14 +19,18 @@ html(lang="en")
                         a(href="/cart") CART
                     li.header_li
                         a(href="/order") ORDER
-                div.user #{user}
+                div.user
+                    if isAuth 
+                        p #{user}
+                    else 
+                        a(href="/login") Login
         div.main_div
-            h1.title This is Full Product Post page
+            //- h1.title This is Full Product Post page
             div.container
                 each product in prods
                     div.products
                         img.image(src=product.imageUrl, alt=`${product.title}`,)
-                        p.title #{product.title}
+                        p.title #{product.title.toUpperCase()}
                         div.btnCtr
                             form(action="/cart/add-cart", method="post") 
                                 input(type="hidden", name="prodId" , value=`${product._id}`)

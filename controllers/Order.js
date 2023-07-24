@@ -14,7 +14,8 @@ exports.getOrder = (req, res, next) => {
       res.render("Orders", {
         pageTitle: "Get",
         orders: details,
-        user : req.user?.name
+        user : req.user?.name,
+        isAuth : req.session.userId || false,
       });
     })
     .catch((err) => {
@@ -47,6 +48,7 @@ exports.postOrder = (req, res, next) => {
     : res.render("Error", {
         pageTitle: "Error",
         error: "Your cart is empty!",
-        user : req.user?.name
+        user : req.user?.name,
+        isAuth :  req.session.userId || false,
       });
 };

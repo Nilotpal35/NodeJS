@@ -19,7 +19,11 @@ html(lang="en")
                         a.active(href="/cart") CART
                     li.header_li
                         a(href="/order") ORDER
-                div.user #{user}
+                div.user
+                    if isAuth 
+                        p #{user}
+                    else 
+                        a(href="/login") Login
         div.main_div
             div.cartHeader
                 h2 Total items x #{cartQty} -

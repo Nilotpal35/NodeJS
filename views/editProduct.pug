@@ -19,9 +19,13 @@ html(lang="en")
                         a(href="/cart") CART
                     li.header_li
                         a(href="/order") ORDER
-                div.user #{user}
+                div.user
+                    if isAuth 
+                        p #{user}
+                    else 
+                        a(href="/login") Login
         div.main_div
-            h2.title Edit Produt Form
+            h2.title Edit Product Form
             form.form(action="/admin/edit-product" , method="POST")
                 input(type="hidden", name="_id" , value=product._id) 
                 input(type="hidden", name="id" , value=product.id) 
