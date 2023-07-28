@@ -8,7 +8,8 @@ const { ObjectId } = require("mongodb");
 exports.getAddProduct = (req, res, next) => {
   res.render("AddProduct", {
     pageTitle: "Add Product",
-    user : req.user?.name
+    user: req.user?.name,
+    isAuth: false,
   });
 };
 
@@ -40,7 +41,8 @@ exports.getEditProduct = (req, res, body) => {
     res.render("editProduct", {
       pageTitle: "Edit Product",
       product: product[0],
-      user : req.user?.name
+      user: req.user?.name,
+      isAuth: false,
     });
   });
 };
@@ -64,7 +66,8 @@ exports.getProduct = (req, res, next) => {
     res.render("Products", {
       pageTitle: "ProductPost",
       prods: products,
-      user : req.user?.name
+      user: req.user?.name,
+      isAuth: false,
     });
   });
 };
@@ -96,7 +99,8 @@ exports.getProductDetails = (req, res, next) => {
     res.render("ProductDetail", {
       pageTitle: "Product Detail",
       prod: product,
-      user : req.user?.name
+      user: req.user?.name,
+      isAuth: false,
     });
   });
 };
@@ -130,7 +134,8 @@ exports.getCart = (req, res, next) => {
         prods: fetchedCart,
         cartQty: fetchedCart.length,
         totalPrice: totalPrice,
-        user : req.user?.name
+        user: req.user?.name,
+        isAuth: false,
       });
     })
     .catch((err) => {

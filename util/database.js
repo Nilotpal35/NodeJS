@@ -4,11 +4,11 @@ let _db;
 
 const MongoConnect = (cb) => {
   MongoClient.connect(
-    "mongodb+srv://Nilotpal35:Nilotpal123@nilotpal35.v7znesu.mongodb.net/?retryWrites=true&w=majority"
+    "mongodb+srv://Nilotpal35:Nilotpal123@nilotpal35.v7znesu.mongodb.net/shop?retryWrites=true&w=majority"
   )
     .then((client) => {
       console.log("Connected!");
-      _db = client.db("shop");
+      _db = client.db();
       cb();
     })
     .catch((err) => {

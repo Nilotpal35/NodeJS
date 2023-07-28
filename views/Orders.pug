@@ -11,15 +11,19 @@ html(lang="en")
                 ul.header_ul
                     li.header_li
                         a(href="/") HOME
-                    li.header_li
-                        a(href="/admin/add-product") ADD-PRODUCT
-                    li.header_li
-                        a(href="/products") PRODUCT
-                    li.header_li
-                        a(href="/cart") CART
-                    li.header_li
-                        a.active(href="/order") ORDER
-                div.user #{user}
+                    if(isAuth)
+                        li.header_li
+                            a(href="/admin/add-product") ADD-PRODUCT
+                        li.header_li
+                            a(href="/products") PRODUCT
+                        li.header_li
+                            a(href="/cart") CART
+                        li.header_li
+                            a.active(href="/order") ORDER
+                        li.header_li
+                            a(href="/login") Login
+                if(isAuth)
+                    div.user #{user}
         div.main_div
             //- h1.title This is #{pageTitle} order page
             div.cartContainer

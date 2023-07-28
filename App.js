@@ -9,6 +9,7 @@ const { getErrorPage } = require("./controllers/utility");
 const { MongoConnect } = require("./util/database");
 const userDataModel = require("./models/userDataModel");
 const { orderRoute } = require("./routes/order");
+const { AuthRoute } = require("./routes/auth");
 
 const app = express();
 
@@ -31,6 +32,8 @@ app.use((req, res, next) => {
 });
 
 app.use("/admin", adminRoute.admin);
+
+app.use("/login", AuthRoute);
 
 app.use("/products", shopRoute);
 

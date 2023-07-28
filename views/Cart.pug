@@ -11,15 +11,17 @@ html(lang="en")
                 ul.header_ul
                     li.header_li
                         a(href="/") HOME
-                    li.header_li
-                        a(href="/admin/add-product") ADD-PRODUCT
+                    if(isAuth)
+                        li.header_li
+                            a(href="/admin/add-product") ADD-PRODUCT
                     li.header_li
                         a(href="/products") PRODUCT
                     li.header_li
                         a.active(href="/cart") CART
                     li.header_li
                         a(href="/order") ORDER
-                div.user #{user}
+                if(isAuth)
+                    div.user #{user}
         div.main_div
             div.cartHeader
                 h2 Total items x #{cartQty} -
