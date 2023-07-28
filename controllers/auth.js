@@ -3,7 +3,7 @@ const userDataModel = require("../models/userDataModel");
 exports.getLogin = (req, res, next) => {
   res.render("Login", {
     pageTitle: "Login",
-    isAuth: req.session.userId || false,
+    isAuth: req.session.userId && true,
   });
 };
 

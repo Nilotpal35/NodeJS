@@ -12,10 +12,10 @@ exports.getOrder = (req, res, next) => {
         details.push(...item.details);
       });
       res.render("Orders", {
-        pageTitle: "Get",
+        pageTitle: "Order",
         orders: details,
-        user : req.user?.name,
-        isAuth : req.session.userId || false,
+        user: req.user?.name,
+        isAuth: req.session.userId && true,
       });
     })
     .catch((err) => {
@@ -48,7 +48,7 @@ exports.postOrder = (req, res, next) => {
     : res.render("Error", {
         pageTitle: "Error",
         error: "Your cart is empty!",
-        user : req.user?.name,
-        isAuth :  req.session.userId || false,
+        user: req.user?.name,
+        isAuth: req.session.userId || false,
       });
 };

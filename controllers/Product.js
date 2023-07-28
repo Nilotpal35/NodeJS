@@ -9,7 +9,7 @@ exports.getAddProduct = (req, res, next) => {
   res.render("AddProduct", {
     pageTitle: "Add Product",
     user : req.user?.name,
-    isAuth :  req.session.userId || false,
+    isAuth :  req.session.userId && true,
   });
 };
 
@@ -42,7 +42,7 @@ exports.getEditProduct = (req, res, body) => {
       pageTitle: "Edit Product",
       product: product[0],
       user : req.user?.name,
-      isAuth : req.session.userId || false,
+      isAuth : req.session.userId && true,
     });
   });
 };
@@ -67,7 +67,7 @@ exports.getProduct = (req, res, next) => {
       pageTitle: "ProductPost",
       prods: products,
       user : req.user?.name,
-      isAuth :  req.session.userId || false,
+      isAuth :  req.session.userId && true,
     });
   });
 };
@@ -100,7 +100,7 @@ exports.getProductDetails = (req, res, next) => {
       pageTitle: "Product Detail",
       prod: product,
       user : req.user?.name,
-      isAuth : req.session.userId || false,
+      isAuth : req.session.userId && true,
     });
   });
 };
@@ -135,7 +135,7 @@ exports.getCart = (req, res, next) => {
         cartQty: fetchedCart.length,
         totalPrice: totalPrice,
         user : req.user?.name,
-        isAuth : req.session.userId || false,
+        isAuth : req.session.userId && true,
       });
     })
     .catch((err) => {
