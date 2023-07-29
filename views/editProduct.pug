@@ -14,29 +14,33 @@ html(lang="en")
                     if(isAuth)
                         li.header_li
                             a(href="/admin/add-product") ADD-PRODUCT
-                    li.header_li
-                        a.active(href="/products") PRODUCT
-                    li.header_li
-                        a(href="/cart") CART
-                    li.header_li
-                        a(href="/order") ORDER
-                if(isAuth)
+                        li.header_li
+                            a.active(href="/products") PRODUCT
+                        li.header_li
+                            a(href="/cart") CART
+                        li.header_li
+                            a(href="/order") ORDER
+                if isAuth
                     div.user #{user}
+                else 
+                    a(href='/login') Login
         div.main_div
-            h2.title Edit Produt Form
-            form.form(action="/admin/edit-product" , method="POST")
-                input(type="hidden", name="_id" , value=product._id) 
-                input(type="hidden", name="id" , value=product.id) 
-                label(for="title") Title 
-                input(type="text", name="title" , placeholder="title" value=product.title, required)
-                label(for="imageUrl") Image
-                input(type="text", name="imageUrl" , placeholder="image" value=product.imageUrl, required)
-                label(for="price") Price 
-                input(type="number", name="price" ,id="price",placeholder="price" step="0.01" value=product.price, required)
-                label(for="description") Description 
-                textarea(name="description", cols="20",id="description", rows="5" placeholder="description", required) #{product.description}
-                div.button-ctr
-                    button(type="submit") Save 
-                    button(type="reset") Reset
+            if isAuth
+                h2.title Edit Produt Form
+                form.form(action="/admin/edit-product" , method="POST")
+                    input(type="hidden", name="_id" , value=product._id) 
+                    label(for="title") Title 
+                    input(type="text", name="title" , placeholder="title" value=product.title, required)
+                    label(for="imageUrl") Image
+                    input(type="text", name="imageUrl" , placeholder="image" value=product.imageUrl, required)
+                    label(for="price") Price 
+                    input(type="number", name="price" ,id="price",placeholder="price" step="0.01" value=product.price, required)
+                    label(for="description") Description 
+                    textarea(name="description", cols="20",id="description", rows="5" placeholder="description", required) #{product.description}
+                    div.button-ctr
+                        button(type="submit") Save 
+                        button(type="reset") Reset
+            else 
+                h1.title You must have to login First
         footer.main_footer
             p &copy; 2023 Nilotpal &reg; MIT License

@@ -14,35 +14,40 @@ html(lang="en")
                     if(isAuth)
                         li.header_li
                             a(href="/admin/add-product") ADD-PRODUCT
-                    li.header_li
-                        a(href="/products") PRODUCT
-                    li.header_li
-                        a.active(href="/cart") CART
-                    li.header_li
-                        a(href="/order") ORDER
-                if(isAuth)
+                        li.header_li
+                            a(href="/products") PRODUCT
+                        li.header_li
+                            a.active(href="/cart") CART
+                        li.header_li
+                            a(href="/order") ORDER
+                if isAuth
                     div.user #{user}
+                else 
+                    a(href='/login') Login
         div.main_div
-            div.cartHeader
-                h2 Total items x #{cartQty} -
-                h2 $#{totalPrice}
-            div.cartContainer
-                each product in prods
-                    div.cartProducts
-                        img.cartImage(src=product.imageUrl, alt=`${product.title}`,)
-                        p.cartTitle #{product.title} X 1 
-                        div.cartBtnCtr
-                            form(action="/cart/delete", method="post")
-                                input(type="hidden", name="prodId" , value=`${product._id}`)
-                                button.cartButton(type="submit") Remove
-                            form(action="/product-detail", method="post")
-                                input(type="hidden", name="prodId" , value=`${product._id}`)
-                                button.cartButton(type="submit") Details
-            div.hr
-            div.order
-                form(action="/order", method="post")
-                    input(type="hidden", name="prods", value=`${prods}`)
-                    //- if(prods.length > 0) 
-                    button.orderButton Order Now
+            if isAuth 
+                div.cartHeader
+                    h2 Total items x #{cartQty} -
+                    h2 $#{totalPrice}
+                div.cartContainer
+                    each product in prods
+                        div.cartProducts
+                            img.cartImage(src=product.imageUrl, alt=`${product.title}`,)
+                            p.cartTitle #{product.title} X #{product.qty} 
+                            div.cartBtnCtr
+                                form(action="/cart/delete", method="post")
+                                    input(type="hidden", name="prodId" , value=`${product._id}`)
+                                    button.cartButton(type="submit") Remove
+                                form(action="/product-detail", method="post")
+                                    input(type="hidden", name="prodId" , value=`${product._id}`)
+                                    button.cartButton(type="submit") Details
+                div.hr
+                div.order
+                    form(action="/order", method="post")
+                        input(type="hidden", name="prods", value=`${prods}`)
+                        //- if(prods.length > 0) 
+                        button.orderButton Order Now
+            else 
+                h1.title You must have to login First
         footer.main_footer
             p &copy; 2023 Nilotpal &reg; MIT License

@@ -20,24 +20,27 @@ html(lang="en")
                             a(href="/cart") CART
                         li.header_li
                             a.active(href="/order") ORDER
-                        li.header_li
-                            a(href="/login") Login
                 if(isAuth)
                     div.user #{user}
+                else 
+                    a(href='/login') Login
         div.main_div
-            //- h1.title This is #{pageTitle} order page
-            div.cartContainer
-                each product in orders
-                    div.cartProducts
-                        img.cartImage(src=product.imageUrl, alt=`${product.title}`,)
-                        p.cartTitle #{product.title} 
-                        div.cartBtnCtr
-                            //- form(action="/product-detail", method="post")
-                            //-     input(type="hidden", name="prodId" , value=`${product._id}`)
-                            //-     button.cartButton(type="submit") Details
-            //- each order in orders
-            //-     ul 
-            //-         li
-            //-             h1.title #{order.title}
+            if isAuth
+                div.cartContainer
+                    each product in orders
+                        h2.date #{new Date(product.date).toDateString()}
+                        div.cartProducts
+                            img.cartImage(src=product.imageUrl, alt=`${product.title}`,)
+                            p.cartTitle #{product.title} 
+                            div.cartBtnCtr
+                                //- form(action="/product-detail", method="post")
+                                //-     input(type="hidden", name="prodId" , value=`${product._id}`)
+                                //-     button.cartButton(type="submit") Details
+                //- each order in orders
+                //-     ul 
+                //-         li
+                //-             h1.title #{order.title}
+            else 
+                h1.title You must have to login First
         footer.main_footer
             p &copy; 2023 Nilotpal &reg; MIT License

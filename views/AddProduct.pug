@@ -14,28 +14,33 @@ html(lang="en")
                     if(isAuth)
                         li.header_li
                             a.active(href="/admin/add-product") ADD-PRODUCT
-                    li.header_li
-                        a(href="/products") PRODUCT
-                    li.header_li
-                        a(href="/cart") CART
-                    li.header_li
-                        a(href="/order") ORDER
-                if(isAuth)
+                        li.header_li
+                            a(href="/products") PRODUCT
+                        li.header_li
+                            a(href="/cart") CART
+                        li.header_li
+                            a(href="/order") ORDER
+                if isAuth
                     div.user 
-                        p#{user.toUpperCase()}
+                        p #{user}
+                else 
+                    a(href='/login') Login
         div.main_div
-            h2.title Add Produt Form
-            form.form(action="/admin/add-product" , method="POST") 
-                label(for="title") Title 
-                input(type="text", name="title" , placeholder="title", required)
-                label(for="imageUrl") Image
-                input(type="text", name="imageUrl" , placeholder="image", required)
-                label(for="price") Price 
-                input(type="number", name="price" ,id="price",placeholder="price" step="0.01", required)
-                label(for="description") Description 
-                textarea(name="description", cols="20",id="description", rows="5" placeholder="description", required)
-                div.button-ctr
-                    button(type="submit") Add 
-                    button(type="reset") Reset
+            if isAuth
+                h2.title Add Produt Form
+                form.form(action="/admin/add-product" , method="POST") 
+                    label(for="title") Title 
+                    input(type="text", name="title" , placeholder="title", required)
+                    label(for="imageUrl") Image
+                    input(type="text", name="imageUrl" , placeholder="image", required)
+                    label(for="price") Price 
+                    input(type="number", name="price" ,id="price",placeholder="price" step="0.01", required)
+                    label(for="description") Description 
+                    textarea(name="description", cols="20",id="description", rows="5" placeholder="description", required)
+                    div.button-ctr
+                        button(type="submit") Add 
+                        button(type="reset") Reset
+            else 
+                h1.title You must have to login First
         footer.main_footer
             p &copy; 2023 Nilotpal &reg; MIT License

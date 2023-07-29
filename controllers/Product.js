@@ -1,233 +1,267 @@
-// const products = [];
-const { v4: uuidv4 } = require("uuid");
-const { productDataModel } = require("../models/dataModel");
 const { newDataModel } = require("../models/cloudDataModel");
 const userDataModel = require("../models/userDataModel");
 const { ObjectId } = require("mongodb");
 
 exports.getAddProduct = (req, res, next) => {
-  res.render("AddProduct", {
-    pageTitle: "Add Product",
-    user: req.user?.name,
-    isAuth: false,
-  });
+  if (req.session?.userId) {
+    userDataModel.getUserById(req.session?.userId).then((userInfo) => {
+      res.render("AddProduct", {
+        pageTitle: "Add Product",
+        user: userInfo?.name,
+        isAuth: true,
+      });
+    });
+  } else {
+    res.redirect("/login");
+  }
 };
 
-//new way using mongo db;
 exports.postAddProduct = (req, res, next) => {
   const { title, imageUrl, price, description } = req.body;
-  const formData = { id: uuidv4(), title, imageUrl, price, description };
+  const formData = { title, imageUrl, price, description };
   const storeDb = new newDataModel();
-  storeDb.store(formData);
-  res.redirect("/products");
-};
-
-//old way
-// exports.postAddProduct = (req, res, next) => {
-//   const { title, imageUrl, price, description } = req.body;
-//   const formData = { id: uuidv4(), title, imageUrl, price, description };
-//   const store = new productDataModel();
-//   store.storeData(formData);
-//   res.redirect("/products");
-// };
-
-exports.getEditProduct = (req, res, body) => {
-  const { prodId } = req.body;
-  const product = [];
-  newDataModel.getDetails(prodId, (fetchedData) => {
-    if (fetchedData) {
-      product.push(fetchedData);
-    }
-    res.render("editProduct", {
-      pageTitle: "Edit Product",
-      product: product[0],
-      user: req.user?.name,
-      isAuth: false,
-    });
-  });
-};
-
-exports.postEditProduct = (req, res, next) => {
-  const { _id, id, title, imageUrl, price, description } = req.body;
-  const formData = { id, title, imageUrl, price, description };
-  newDataModel.editData(_id, formData);
-  res.redirect("/products");
-};
-
-//new way by using mongo db
-
-exports.getProduct = (req, res, next) => {
-  //new approach
-  const products = [];
-  newDataModel.getData((fetchedData) => {
-    if (fetchedData) {
-      products.push(...fetchedData);
-    }
-    res.render("Products", {
-      pageTitle: "ProductPost",
-      prods: products,
-      user: req.user?.name,
-      isAuth: false,
-    });
-  });
-};
-
-//old way by using file
-// exports.getProduct = (req, res, next) => {
-//   //new approach
-//   const products = [];
-//   productDataModel.getData((fetchedData) => {
-//     if (fetchedData) {
-//       const data = JSON.parse(fetchedData);
-//       products.push(...data);
-//     }
-//     res.render("Products", {
-//       pageTitle: "ProductPost",
-//       prods: products,
-//     });
-//   });
-// };
-
-exports.getProductDetails = (req, res, next) => {
-  const { prodId } = req.body;
-  console.log("DETAILS", prodId);
-  const product = [];
-  newDataModel.getDetails(prodId, (fetchedData) => {
-    if (fetchedData) {
-      product.push(fetchedData);
-    }
-    res.render("ProductDetail", {
-      pageTitle: "Product Detail",
-      prod: product,
-      user: req.user?.name,
-      isAuth: false,
-    });
-  });
-};
-
-exports.addCart = async (req, res, next) => {
-  const { prodId } = req.body;
-  const userData = req.user;
-  userData.cart.push(prodId);
-  userDataModel.addCart(userData);
-  res.redirect("/cart");
-};
-
-//new way of getting cart items
-exports.getCart = (req, res, next) => {
-  const user = req.user;
-  console.log("cart items", user);
-  const cartItems = user.cart.map((item) => {
-    if (item) {
-      return new ObjectId(item);
-    }
-  });
-  console.log("cart items", cartItems);
-  userDataModel
-    .getCart(cartItems)
-    .then((fetchedCart) => {
-      const totalPrice = fetchedCart.reduce((acc, cur) => {
-        return (acc = +acc + +cur.price);
-      }, 0);
-      res.render("Cart", {
-        pageTitle: "Cart",
-        prods: fetchedCart,
-        cartQty: fetchedCart.length,
-        totalPrice: totalPrice,
-        user: req.user?.name,
-        isAuth: false,
-      });
+  storeDb
+    .store(formData)
+    .then((result) => {
+      console.log("NEW PRODUCT ADDED", result);
+      res.redirect("/products");
     })
     .catch((err) => {
       throw err;
     });
-  // userDataModel.getCart(cartItems, (fetchedCart) => {
-  //   const totalPrice = fetchedCart.reduce((acc, cur) => {
-  //     return (acc = +acc + +cur.price);
-  //   }, 0);
-  //   console.log("TOTAL PRICE", fetchedCart,totalPrice);
-
-  //   res.render("Cart", {
-  //     pageTitle: "Cart",
-  //     prods: fetchedCart,
-  //     cartQty: fetchedCart.length,
-  //     totalPrice: totalPrice,
-  //   });
-  // });
 };
 
-//old way of getting cart items
-// exports.getCart = (req, res, next) => {
-//   const cartProducts = [];
-//   productDataModel.getCartList((fetchedData) => {
-//     if (fetchedData) {
-//       const data = JSON.parse(fetchedData);
-//       cartProducts.push(...data);
-//     }
-//     const totalPrice = cartProducts.reduce((acc, curr) => {
-//       return (acc = +acc + +curr.price);
-//     }, 0);
-//     res.render("Cart", {
-//       pageTitle: "Cart",
-//       prods: cartProducts,
-//       cartQty: cartProducts.length,
-//       totalPrice: totalPrice,
-//     });
-//   });
-// };
+exports.getEditProduct = (req, res, body) => {
+  if (req.session?.userId) {
+    userDataModel
+      .getUserById(req.session?.userId)
+      .then((userInfo) => {
+        const { prodId } = req.body;
+        newDataModel.getDetails(prodId, (fetchedData) => {
+          res.render("editProduct", {
+            pageTitle: "Edit Product",
+            product: fetchedData,
+            user: userInfo?.name,
+            isAuth: true,
+          });
+        });
+      })
+      .catch((err) => {
+        throw err;
+      });
+  } else {
+    res.redirect("/login");
+  }
+};
+
+exports.postEditProduct = (req, res, next) => {
+  const { _id, title, imageUrl, price, description } = req.body;
+  const formData = { title, imageUrl, price, description };
+  newDataModel
+    .editData(_id, formData)
+    .then(() => {
+      res.redirect("/products");
+    })
+    .catch((err) => {
+      throw err;
+    });
+};
+
+exports.getProduct = (req, res, next) => {
+  const products = [];
+  if (req.session?.userId) {
+    userDataModel
+      .getUserById(req.session?.userId)
+      .then((userInfo) => {
+        newDataModel.getData((fetchedData) => {
+          if (fetchedData) {
+            products.push(...fetchedData);
+          }
+          res.render("Products", {
+            pageTitle: "ProductPost",
+            prods: products,
+            user: userInfo?.name,
+            isAuth: true,
+          });
+        });
+      })
+      .catch((err) => {
+        throw err;
+      });
+  } else {
+    res.redirect("/login");
+  }
+};
+
+exports.getProductDetails = (req, res, next) => {
+  if (req.session?.userId) {
+    userDataModel
+      .getUserById(req.session?.userId)
+      .then((userInfo) => {
+        const { prodId } = req.body;
+        newDataModel.getDetails(prodId, (fetchedData) => {
+          res.render("ProductDetail", {
+            pageTitle: "Product Detail",
+            prod: [fetchedData],
+            user: userInfo?.name,
+            isAuth: true,
+          });
+        });
+      })
+      .catch((err) => {
+        throw err;
+      });
+  } else {
+    res.redirect("/login");
+  }
+};
+
+exports.addCart = async (req, res, next) => {
+  const { prodId } = req.body;
+  if (req.session?.userId) {
+    userDataModel
+      .getUserById(req.session?.userId)
+      .then((userInfo) => {
+        //userInfo.cart.push(prodId);
+        if (userInfo.cart.length < 1) {
+          userInfo.cart.push({ prodId: prodId, qty: 1 });
+        } else {
+          const productFound = userInfo.cart.find(
+            (item) => item.prodId.toString() === prodId.toString()
+          );
+          console.log("product found", productFound);
+          if (productFound) {
+            const ExistingCartItem = userInfo.cart.filter(
+              (item) => item.prodId !== productFound.prodId
+            );
+            productFound.qty += 1;
+            ExistingCartItem.push(productFound);
+            userInfo.cart = [...ExistingCartItem];
+          } else {
+            userInfo.cart.push({ prodId, qty: 1 });
+          }
+        }
+        console.log("ADD - CART", userInfo);
+        userDataModel
+          .addCart(userInfo)
+          .then((result) => {
+            res.redirect("/cart");
+          })
+          .catch((err) => {
+            throw err;
+          });
+      })
+      .catch((err) => {
+        throw err;
+      });
+  } else {
+    res.redirect("/login");
+  }
+};
+
+exports.getCart = (req, res, next) => {
+  if (req.session?.userId) {
+    userDataModel
+      .getUserById(req.session?.userId)
+      .then((userInfo) => {
+        const cartItems = userInfo.cart.map((item) => {
+          if (item.prodId) {
+            return new ObjectId(item.prodId);
+          }
+        });
+        userDataModel
+          .getCart(cartItems)
+          .then((fetchedCart) => {
+            //const cartQty = req.session?.user.cart
+            const totalPricee = fetchedCart.reduce((acc, cur) => {
+              const qty = userInfo.cart.find(
+                (item) => item.prodId.toString() === cur._id.toString()
+              ).qty;
+              return (acc = +acc + +cur.price * qty);
+            }, 0);
+            fetchedCart = fetchedCart.map((i) => {
+              const qty = userInfo.cart.find(
+                (item) => item.prodId.toString() === i._id.toString()
+              ).qty;
+              return { ...i, qty: qty };
+            });
+            console.log("MODIFIED CART", fetchedCart);
+            res.render("Cart", {
+              pageTitle: "Cart",
+              prods: fetchedCart,
+              cartQty: 0,
+              totalPrice: totalPricee,
+              user: userInfo?.name,
+              isAuth: true,
+            });
+          })
+          .catch((err) => {
+            throw err;
+          });
+      })
+      .catch((err) => {
+        throw err;
+      });
+  } else {
+    // res.render("Cart", {
+    //   pageTitle: "Cart",
+    //   isAuth: false,
+    // });
+    res.redirect("/login");
+  }
+};
 
 exports.deleteProduct = (req, res, next) => {
   const { prodId } = req.body;
-  console.log("DELETE PRODUCT", prodId);
-  newDataModel.deleteData(prodId);
-  res.redirect("/products");
+  newDataModel
+    .deleteProduct(prodId)
+    .then(() => {
+      res.redirect("/products");
+    })
+    .catch((err) => {
+      throw err;
+    });
 };
 
 exports.deleteCart = (req, res, next) => {
-  const { prodId } = req.body;
-  const userData = req.user;
-  userData.cart = userData.cart.filter((item) => item !== prodId);
-  userDataModel.removeCart(userData);
-  res.redirect("/cart");
+  if (req.session?.userId) {
+    userDataModel
+      .getUserById(req.session?.userId)
+      .then((userInfo) => {
+        const { prodId } = req.body;
+        if (userInfo.cart.length > 0) {
+          const productFound = userInfo.cart.find(
+            (item) => item.prodId.toString() === prodId.toString()
+          );
+          console.log("product found", productFound);
+          if (productFound) {
+            const ExistingCartItem = userInfo.cart.filter(
+              (item) => item.prodId !== productFound.prodId
+            );
+            if (productFound.qty > 1) {
+              productFound.qty -= 1;
+              ExistingCartItem.push(productFound);
+            }
+            userInfo.cart = [...ExistingCartItem];
+            userDataModel
+              .removeCart(userInfo)
+              .then(() => {
+                res.redirect("/cart");
+              })
+              .catch((err) => {
+                throw err;
+              });
+          } else {
+            console.log("product not found");
+            res.redirect("/cart");
+          }
+        } else {
+          console.log("cart is empty");
+          res.redirect("/cart");
+        }
+      })
+      .catch((err) => {
+        throw err;
+      });
+  }
 };
-
-// exports.deleteCart = (req, res, next) => {
-//   const { prodId } = req.body;
-//   newDataModel.updateCart(prodId, false);
-//   setTimeout(() => {
-//     res.redirect("/cart");
-//   }, 1000);
-// };
-
-///OLDER APPROCHES FOR GETTING  STORED DATA FROM data.json file
-
-//older approach
-// const fetchedData = [];
-// productData.getData((bufferData) => {
-// fetchedData.push(bufferData);
-// console.log("data", fetchedData);
-// const product = Buffer.concat(fetchedData).toString();
-// if (product) {
-//   console.log("product exist", product && JSON.parse(product));
-//   // return res.render("ProductPost", {
-//   //   pageTitle: "ProductPost",
-//   //   prods: product && JSON.parse(product),
-//   // });
-// } else {
-//   console.log("nothing existy");
-//   // res.render("ProductPost", {
-//   //   pageTitle: "ProductPost",
-//   //   prods: [],
-//   // });
-//   }
-//   // if (product) {
-//   //   console.log("data present", product);
-//   // } else {
-//   //   console.log("no data", product);
-//   // }
-//   // res.render("ProductPost", {
-//   //   pageTitle: "ProductPost",
-//   //   prods: product,
-//   // });
-//   // res.render("Error");
-// });

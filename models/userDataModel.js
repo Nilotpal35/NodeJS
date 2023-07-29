@@ -14,12 +14,26 @@ class userDataModel {
       });
   }
 
-  static getUserById(userId, cb) {
+  static getUserByEmail(emailId) {
     const db = getDb();
-    db.collection("user")
+    return db
+      .collection("user")
+      .findOne({ email: emailId })
+      .then((res) => {
+        return res;
+      })
+      .catch((err) => {
+        throw err;
+      });
+  }
+
+  static getUserById(userId) {
+    const db = getDb();
+    return db
+      .collection("user")
       .findOne({ _id: new ObjectId(userId) })
       .then((res) => {
-        cb(res);
+        return res;
       })
       .catch((err) => {
         throw err;
@@ -27,14 +41,24 @@ class userDataModel {
   }
 
   static addCart(updatedData) {
+    console.log("updated data", updatedData);
     const db = getDb();
-    db.collection("user")
+    return db
+      .collection("user")
       .updateOne(
         { _id: new ObjectId(updatedData._id) },
-        { $set: { ...updatedData } }
+        {
+          $set: {
+            // name: updatedData.name,
+            // email: updatedData.email,
+            // cart: updatedData.cart,
+            ...updatedData,
+          },
+        }
       )
       .then((res) => {
-        console.log(res);
+        console.log("item added into cart successfully", res);
+        return res;
       })
       .catch((err) => {
         throw err;
@@ -43,11 +67,12 @@ class userDataModel {
 
   static getCart(cartitems) {
     const db = getDb();
-    return db.collection("product")
+    return db
+      .collection("product")
       .find({ _id: { $in: cartitems } })
       .toArray()
       .then((res) => {
-        return res
+        return res;
       })
       .catch((err) => {
         throw err;
@@ -56,13 +81,17 @@ class userDataModel {
 
   static removeCart(updatedUserData) {
     const db = getDb();
-    db.collection("user")
+    return db
+      .collection("user")
       .updateOne(
         { _id: new ObjectId(updatedUserData._id) },
-        { $set: { ...updatedUserData } }
+        {
+          $set: { ...updatedUserData },
+        }
       )
       .then((res) => {
         console.log("Cart item removed successfully", res);
+        return res;
       })
       .catch((err) => {
         throw err;

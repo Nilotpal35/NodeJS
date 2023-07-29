@@ -1,3 +1,4 @@
+const { ObjectId } = require("mongodb");
 const { getDb } = require("../util/database");
 
 class orderDataModel {
@@ -18,10 +19,11 @@ class orderDataModel {
   }
 
   static getOrder(userId) {
+    console.log("userId", userId);
     const db = getDb();
     return db
       .collection("order")
-      .find({ userid: userId })
+      .find({ userid: new ObjectId(userId) })
       .toArray()
       .then((res) => {
         return res;

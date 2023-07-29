@@ -9,8 +9,8 @@ html(lang="en")
         header.header_main 
             nav.header_nav
                 ul.header_ul
-                    li.header_li
-                        a(href="/") HOME
+                    //- li.header_li
+                    //-     a(href="/") HOME
                     //- if(isAuth)
                     //-     li.header_li
                     //-         a.active(href="/admin/add-product") ADD-PRODUCT
@@ -29,5 +29,7 @@ html(lang="en")
                 input(type="password", name="password" , placeholder="password", required)
                 div.button-ctr
                     button(type="submit") Login 
+            if errorMessage 
+                p.error #{errorMessage}
         footer.main_footer
             p &copy; 2023 Nilotpal &reg; MIT License

@@ -36,7 +36,7 @@
   margin: 1rem;
   padding: 10px;
   border-radius: 5px;
-  color: rgb(247, 247, 247)
+  color: rgb(247, 247, 247);
 }
 
 a:active,
@@ -65,7 +65,7 @@ a {
   flex-direction: column;
   align-items: center;
   /* justify-content: center; */
-  bottom : 0
+  bottom: 0;
 }
 
 .form {
@@ -83,7 +83,8 @@ label {
   font-size: larger;
   margin: 1rem;
 }
-input, textarea {
+input,
+textarea {
   padding: 10px;
   margin: 5px;
   font-weight: 500;
@@ -151,7 +152,7 @@ button {
   color: rgb(96, 96, 96);
   /* background-color: black; */
   /* width: 100%; */
-  padding : 5px 2px;
+  padding: 5px 2px;
 }
 
 .btnCtr {
@@ -186,7 +187,7 @@ button {
   background-color: #01666e;
   border-radius: 10px;
   overflow: hidden;
-  margin-top : 1rem;
+  margin-top: 1rem;
   margin-bottom: 1rem;
 }
 
@@ -200,13 +201,11 @@ button {
   color: white;
   /* background-color: black; */
   width: 100%;
-  padding : 5px 2px;
+  padding: 5px 2px;
   font-size: large;
 }
 
-
 /* below styles are for cart */
-
 
 .cartContainer {
   display: flex;
@@ -229,7 +228,7 @@ button {
 }
 .cartImage {
   height: 100%;
-  width : 15vw;
+  width: 15vw;
 }
 
 .cartHeader {
@@ -252,8 +251,8 @@ button {
   /* width: 100%; */
 }
 
-.cartButton{
-  width : 70px;
+.cartButton {
+  width: 70px;
   background-color: rgb(95, 95, 95);
   color: white;
   margin: 3px 8px;
@@ -298,3 +297,11 @@ button {
   color: #e4fc10;
 }
 
+.error {
+  color: #ff0000;
+  font-size: 1rem;
+}
+
+.date {
+  color :#00463e
+}

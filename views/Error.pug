@@ -11,17 +11,19 @@ html(lang="en")
                 ul.header_ul
                     li.header_li
                         a(href="/") HOME
-                    if(isAuth)
+                    if isAuth
                         li.header_li
                             a(href="/admin/add-product") ADD-PRODUCT
-                    li.header_li
-                        a(href="/products") PRODUCT
-                    li.header_li
-                        a(href="/cart") CART
-                    li.header_li
-                        a(href="/order") ORDER
-                if(isAuth)
+                        li.header_li
+                            a(href="/products") PRODUCT
+                        li.header_li
+                            a(href="/cart") CART
+                        li.header_li
+                            a(href="/order") ORDER
+                if isAuth
                     div.user #{user}
+                else 
+                    a(href='/login') Login
         div.main_div
             if error 
                 h1.title #{error}

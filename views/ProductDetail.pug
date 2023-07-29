@@ -22,16 +22,21 @@ html(lang="en")
                             a(href="/order") ORDER
                 if(isAuth)
                     div.user #{user}
+                else 
+                    a(href='/login') Login
         div.main_div
-            div.container
-                each product in prod
-                    div.productDetail
-                        img.dimage(src=product.imageUrl, alt=`${product}`,)
-                        p.dtitle #{product.title}
-                        p.dtitle #{product.price}
-                        p.dtitle #{product.description}
-                        form(action="/admin/edit", method="post") 
-                            input(type="hidden", name="prodId" , value=product._id)
-                            button.cartButton(type="submit") Edit
+            if isAuth
+                div.container
+                    each product in prod
+                        div.productDetail
+                            img.dimage(src=product.imageUrl, alt=`${product}`,)
+                            p.dtitle #{product.title}
+                            p.dtitle #{product.price}
+                            p.dtitle #{product.description}
+                            form(action="/admin/edit", method="post") 
+                                input(type="hidden", name="prodId" , value=product._id)
+                                button.cartButton(type="submit") Edit
+            else 
+                h1.title You must have to login First
         footer.main_footer
             p &copy; 2023 Nilotpal &reg; MIT License

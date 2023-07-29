@@ -8,7 +8,7 @@ class newDataModel {
       .collection("product")
       .insertOne(formData)
       .then((result) => {
-        console.log("One data saved", result);
+        return result;
       })
       .catch((err) => {
         throw "Some issue in saving data";
@@ -45,23 +45,27 @@ class newDataModel {
   static editData(_id, formData) {
     console.log("FORM DATA", formData);
     const db = getDb();
-    db.collection("product")
+    return db
+      .collection("product")
       .updateOne({ _id: new ObjectId(_id) }, { $set: formData })
       .then((res) => {
         console.log("Updated!", res);
+        return res;
       })
       .catch((err) => {
         throw err;
       });
   }
 
-  static deleteData(_id) {
+  static deleteProduct(_id) {
     const db = getDb();
-    db.collection("product")
+    return db
+      .collection("product")
       .deleteOne({ _id: new ObjectId(_id) })
-      // .then((res) => {
-      //   console.log("Deleted Successfully!", res);
-      // })
+      .then((res) => {
+        console.log("Deleted Successfully!", res);
+        return res;
+      })
       .catch((err) => {
         throw err;
       });
@@ -103,11 +107,6 @@ class newDataModel {
         throw err;
       });
   }
-
-  // static deleteCart(prodId) {
-  //   const db = getDb();
-  //   db.collection('product').
-  // }
 }
 
 exports.newDataModel = newDataModel;

@@ -11,33 +11,37 @@ html(lang="en")
                 ul.header_ul
                     li.header_li
                         a(href="/") HOME
-                    if(isAuth)
+                    if isAuth
                         li.header_li
                             a(href="/admin/add-product") ADD-PRODUCT
-                    li.header_li
-                        a.active(href="/products") PRODUCT
-                    li.header_li
-                        a(href="/cart") CART
-                    li.header_li
-                        a(href="/order") ORDER
-                if(isAuth)
+                        li.header_li
+                            a.active(href="/products") PRODUCT
+                        li.header_li
+                            a(href="/cart") CART
+                        li.header_li
+                            a(href="/order") ORDER
+                if isAuth
                     div.user #{user}
+                else 
+                    a(href='/login') Login
         div.main_div
-            h1.title This is Full Product Post page
-            div.container
-                each product in prods
-                    div.products
-                        img.image(src=product.imageUrl, alt=`${product.title}`,)
-                        p.title #{product.title}
-                        div.btnCtr
-                            form(action="/cart/add-cart", method="post") 
-                                input(type="hidden", name="prodId" , value=`${product._id}`)
-                                button.button(type="submit") Add
-                            form(action="/products/delete", method="post")
-                                input(type="hidden", name="prodId" , value=`${product._id}`)
-                                button.button(type="submit") Delete
-                            form(action="/product-detail", method="post")
-                                input(type="hidden", name="prodId" , value=`${product._id}`)
-                                button.button(type="submit") Details
+            if isAuth
+                div.container
+                    each product in prods
+                        div.products
+                            img.image(src=product.imageUrl, alt=`${product.title}`,)
+                            p.title #{product.title}
+                            div.btnCtr
+                                form(action="/cart/add-cart", method="post") 
+                                    input(type="hidden", name="prodId" , value=`${product._id}`)
+                                    button.button(type="submit") Add
+                                form(action="/products/delete", method="post")
+                                    input(type="hidden", name="prodId" , value=`${product._id}`)
+                                    button.button(type="submit") Delete
+                                form(action="/product-detail", method="post")
+                                    input(type="hidden", name="prodId" , value=`${product._id}`)
+                                    button.button(type="submit") Details
+            else 
+                h1.title You must have to login First
         footer.main_footer
             p &copy; 2023 Nilotpal &reg; MIT License
