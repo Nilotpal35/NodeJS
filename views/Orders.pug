@@ -28,7 +28,7 @@ html(lang="en")
             if isAuth
                 div.cartContainer
                     each product in orders
-                        h2.date #{new Date(product.date).toDateString()}
+                        h2.date #{new Date(product.date).toLocaleString()}
                         div.cartProducts
                             img.cartImage(src=product.imageUrl, alt=`${product.title}`,)
                             p.cartTitle #{product.title} 

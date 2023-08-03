@@ -77,9 +77,16 @@ exports.getProduct = (req, res, next) => {
           if (fetchedData) {
             products.push(...fetchedData);
           }
+
           res.render("Products", {
             pageTitle: "ProductPost",
-            prods: products,
+            prods: products.sort((a, b) => {
+              if (a.title > b.title) {
+                return 1;
+              } else {
+                return -1;
+              }
+            }),
             user: userInfo?.name,
             isAuth: true,
           });
@@ -185,7 +192,16 @@ exports.getCart = (req, res, next) => {
               ).qty;
               return { ...i, qty: qty };
             });
-            console.log("MODIFIED CART", fetchedCart);
+            console.log(
+              "MODIFIED CART",
+              fetchedCart.sort((a, b) => {
+                if (a.title > b.title) {
+                  return 1;
+                } else {
+                  return -1;
+                }
+              })
+            );
             res.render("Cart", {
               pageTitle: "Cart",
               prods: fetchedCart,
