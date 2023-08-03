@@ -2,12 +2,28 @@ const { ObjectId } = require("mongodb");
 const { getDb } = require("../util/database");
 
 class userDataModel {
-  newUser(formData) {
+  static newUser(formData) {
     const db = getDb();
-    db.collection("user")
+    return db
+      .collection("user")
       .insertOne(formData)
+      .then(() => {
+        return;
+      })
+      .catch((err) => {
+        throw err;
+      });
+  }
+
+  //get all the users email address
+  static getAllUsers() {
+    const db = getDb();
+    return db
+      .collection("user")
+      .aggregate([{ $project: { _id: 0, email: "$email" } }])
+      .toArray()
       .then((res) => {
-        console.log("User response", res);
+        return res;
       })
       .catch((err) => {
         throw err;

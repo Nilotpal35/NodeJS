@@ -299,9 +299,22 @@ button {
 
 .error {
   color: #ff0000;
-  font-size: 1rem;
+  font-size: 1.2rem;
 }
 
 .date {
-  color :#00463e
+  color: #00463e;
+}
+
+.sign-link {
+  background-color: transparent;
+  display:flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sign-link:focus,
+.sign-link:hover {
+  background-color: transparent;
+  color:#e4fc10;
 }

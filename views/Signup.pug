@@ -9,8 +9,8 @@ html(lang="en")
         header.header_main 
             nav.header_nav
                 ul.header_ul
-                    li.header_li
-                        a(href="/") HOME
+                    //- li.header_li
+                    //-     a(href="/") HOME
                     //- if(isAuth)
                     //-     li.header_li
                     //-         a.active(href="/admin/add-product") ADD-PRODUCT
@@ -21,16 +21,18 @@ html(lang="en")
                     //- li.header_li
                     //-     a(href="/order") ORDER
         div.main_div
-            h2.title Login Form
-            form.form(action="/login" , method="POST") 
+            h2.title Signup Form
+            form.form(action="/signup" , method="POST") 
+                label(for="name") Name
+                input(type="text", name="name" , placeholder="Name",value=`${formData&& formData.name || ''}`, required )
                 label(for="email") Email
-                input(type="email", name="email" , placeholder="email",value=`${formData && formData.email || ''}` required)
+                input(type="text", name="email" , placeholder="email",value=`${formData&& formData.email || ''}` )
                 label(for="password") Password
-                input(type="password", name="password" , placeholder="password", required)
+                input(type="password", name="password" , placeholder="password",value=`${formData&& formData.password || ''}`, required)
+                label(for="cnfPassword") Confirm Password
+                input(type="text", name="cnfPassword" , placeholder="retype password",value=`${formData&& formData.cnfPassword || ''}`, required)
                 div.button-ctr
-                    button(type="submit") Login 
-                div
-                    a.sign-link(href="/signup") New user? Sign up 
+                    button(type="submit") SignUp 
             if errorMessage 
                 p.error #{errorMessage}
         footer.main_footer

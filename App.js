@@ -12,6 +12,8 @@ const { orderRoute } = require("./routes/order");
 const { AuthRoute } = require("./routes/auth");
 const session = require("express-session");
 const moment = require("moment");
+const isAuth = require("./Auth/isAuth");
+const nocache = require("nocache");
 
 const MongoDbSession = require("connect-mongodb-session")(session);
 
@@ -69,17 +71,19 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use("/admin", adminRoute.admin);
+app.use(nocache());
+
+app.use("/admin", isAuth, adminRoute.admin);
 
 app.use("/", AuthRoute);
 
-app.use("/products", shopRoute);
+app.use("/products", isAuth, shopRoute);
 
-app.use("/product-detail", shopRoute);
+app.use("/product-detail", isAuth, shopRoute);
 
-app.use("/cart", cartRoute);
+app.use("/cart", isAuth, cartRoute);
 
-app.use("/order", orderRoute);
+app.use("/order", isAuth, orderRoute);
 
 app.use("/", homeRoute);
 
