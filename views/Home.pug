@@ -22,11 +22,14 @@ html(lang="en")
                             a(href="/order") ORDER
                 if isAuth
                     div.user #{user}
-                    form(action="/logout", method="post") 
+                    form(action="/logout", method="post")
+                        input(type="hidden", name="_csrf" value=`${csrfToken}`) 
                         button(type="submit") Logout
                 else 
                     a(href='/login') Login
         div.main_div
+            if errorMessage 
+                h1  #{errorMessage}
             if isAuth 
                 h1.title USER AUTHENTICATED
             else 

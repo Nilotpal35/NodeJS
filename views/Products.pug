@@ -32,13 +32,16 @@ html(lang="en")
                             img.image(src=product.imageUrl, alt=`${product.title}`,)
                             p.title #{product.title}
                             div.btnCtr
-                                form(action="/cart/add-cart", method="post") 
+                                form(action="/cart/add-cart", method="post")
+                                    input(type="hidden", name="_csrf" value=`${csrfToken}`) 
                                     input(type="hidden", name="prodId" , value=`${product._id}`)
                                     button.button(type="submit") Add
                                 form(action="/products/delete", method="post")
+                                    input(type="hidden", name="_csrf" value=`${csrfToken}`)
                                     input(type="hidden", name="prodId" , value=`${product._id}`)
                                     button.button(type="submit") Delete
                                 form(action="/product-detail", method="post")
+                                    input(type="hidden", name="_csrf" value=`${csrfToken}`)
                                     input(type="hidden", name="prodId" , value=`${product._id}`)
                                     button.button(type="submit") Details
             else 

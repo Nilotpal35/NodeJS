@@ -14,17 +14,41 @@ const session = require("express-session");
 const moment = require("moment");
 const isAuth = require("./Auth/isAuth");
 const nocache = require("nocache");
+const cookieParser = require("cookie-parser");
+// const {doubleCsrf} = require("csrf-csrf");
+const csrf = require("csurf");
+const flash = require("connect-flash");
 
 const MongoDbSession = require("connect-mongodb-session")(session);
 
 const app = express();
 
+//CSRF setting
+// const { doubleCsrfProtection } = doubleCsrf({
+//   getSecret: () => "_csrf",
+//   // cookieName: "__Host-psifi.x-csrf-token", // The name of the cookie to be used, recommend using Host prefix.
+//   // cookieOptions: {
+//   //   sameSite: "lax", // Recommend you make this strict if posible
+//   //   path: "/",
+//   //   secure: true,
+//   //   // Additional options supported: domain, maxAge, expires
+//   // },
+//   // size: 64, // The size of the generated tokens in bits
+//   // ignoredMethods: ["GET", "HEAD", "OPTIONS"], // A list of request methods that will not be protected.
+//   // getTokenFromRequest: (req) => req.headers["x-csrf-token"],
+// });
+
+//setting view engine as PUG
 app.set("view engine", "pug");
 
+app.use(flash());
+//setting body-parser for reading static files
 app.use(body_parser.urlencoded({ extended: false }));
 
+//middleware for serve static CSS/JS files  in public folder
 app.use(express.static("public"));
 
+//mongodb-session
 const store = new MongoDbSession({
   uri: "mongodb+srv://Nilotpal35:Nilotpal123@nilotpal35.v7znesu.mongodb.net/?retryWrites=true&w=majority",
   databaseName: "shop",
@@ -55,6 +79,7 @@ app.use(
 //   });
 // });
 
+//this is for resetting the expiry of cookie
 app.use((req, res, next) => {
   const isAuthenticated = req.session && req.session?.userId;
   if (isAuthenticated) {
@@ -71,7 +96,19 @@ app.use((req, res, next) => {
   next();
 });
 
+//this is for clearing the cache after user logs out
 app.use(nocache());
+
+// app.use(cookieParser());
+
+//middleware for CSRF
+// app.use(doubleCsrfProtection);
+app.use(csrf());
+
+app.use((req, res, next) => {
+  res.locals.csrfToken = req.csrfToken();
+  next();
+});
 
 app.use("/admin", isAuth, adminRoute.admin);
 

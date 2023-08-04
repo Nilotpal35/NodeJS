@@ -5,11 +5,14 @@ exports.getLogin = (req, res, next) => {
   if (req.session?.userId) {
     console.log("session id", req.session?.userId);
     userDataModel.getUserById(req.session?.userId, (userInfo) => {
+      req.flash("success", "Successfully logged in!");
       res.redirect("/");
     });
   } else {
+    // if(req.flash(''))
     res.render("Login", {
       pageTitle: "Login",
+      errorMessage : req.flash('success')
     });
   }
 };
@@ -33,7 +36,7 @@ exports.postLogin = (req, res, next) => {
             res.render("Login", {
               pageTitle: "Login",
               formData: { email },
-              errorMessage: "Wrong password!",
+              errorMessage: "Wrong email or password!",
             });
           } else if (result) {
             req.session.userId = userInfo._id;
@@ -41,6 +44,7 @@ exports.postLogin = (req, res, next) => {
               if (err) {
                 console.log(err);
               }
+              req.flash("success", "Successfully logged in!");
               res.redirect("/");
             });
           }
@@ -105,6 +109,7 @@ exports.postSignUp = async (req, res, next) => {
         userDataModel
           .newUser({ name, email, password: pwd, cart: [] })
           .then(() => {
+            req.flash("success", "Successfully signed up!");
             res.redirect("/login");
           });
       })

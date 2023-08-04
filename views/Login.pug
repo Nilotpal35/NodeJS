@@ -27,6 +27,7 @@ html(lang="en")
                 input(type="email", name="email" , placeholder="email",value=`${formData && formData.email || ''}` required)
                 label(for="password") Password
                 input(type="password", name="password" , placeholder="password", required)
+                input(type="hidden", name="_csrf" value=`${csrfToken}`)
                 div.button-ctr
                     button(type="submit") Login 
                 div

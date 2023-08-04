@@ -36,14 +36,17 @@ html(lang="en")
                             p.cartTitle #{product.title} X #{product.qty} 
                             div.cartBtnCtr
                                 form(action="/cart/delete", method="post")
+                                    input(type="hidden", name="_csrf" value=`${csrfToken}`)
                                     input(type="hidden", name="prodId" , value=`${product._id}`)
                                     button.cartButton(type="submit") Remove
                                 form(action="/product-detail", method="post")
+                                    input(type="hidden", name="_csrf" value=`${csrfToken}`)
                                     input(type="hidden", name="prodId" , value=`${product._id}`)
                                     button.cartButton(type="submit") Details
                 div.hr
                 div.order
                     form(action="/order", method="post")
+                        input(type="hidden", name="_csrf" value=`${csrfToken}`)
                         input(type="hidden", name="prods", value=`${prods}`)
                         //- if(prods.length > 0) 
                         button.orderButton Order Now

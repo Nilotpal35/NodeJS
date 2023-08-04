@@ -22,7 +22,8 @@ html(lang="en")
                     //-     a(href="/order") ORDER
         div.main_div
             h2.title Signup Form
-            form.form(action="/signup" , method="POST") 
+            form.form(action="/signup" , method="POST")
+                input(type="hidden", name="_csrf" value=`${csrfToken}`) 
                 label(for="name") Name
                 input(type="text", name="name" , placeholder="Name",value=`${formData&& formData.name || ''}`, required )
                 label(for="email") Email

@@ -29,6 +29,7 @@ html(lang="en")
             if isAuth
                 h2.title Add Produt Form
                 form.form(action="/admin/add-product" , method="POST") 
+                    input(type="hidden", name="_csrf" value=`${csrfToken}`)
                     label(for="title") Title 
                     input(type="text", name="title" , placeholder="title", required)
                     label(for="imageUrl") Image

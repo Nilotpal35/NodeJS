@@ -33,7 +33,8 @@ html(lang="en")
                             p.dtitle #{product.title}
                             p.dtitle #{product.price}
                             p.dtitle #{product.description}
-                            form(action="/admin/edit", method="post") 
+                            form(action="/admin/edit", method="post")
+                                input(type="hidden", name="_csrf" value=`${csrfToken}`) 
                                 input(type="hidden", name="prodId" , value=product._id)
                                 button.cartButton(type="submit") Edit
             else 

@@ -9,6 +9,7 @@ exports.getHomePage = (req, res, next) => {
           pageTitle: "Home",
           user: userInfo.name,
           isAuth: true,
+          errorMessage : req.flash('success') 
         });
       })
       .catch((err) => {
@@ -18,6 +19,7 @@ exports.getHomePage = (req, res, next) => {
     res.render("Home", {
       pageTitle: "Home",
       isAuth: false,
+      errorMessage : req.flash('success') 
     });
   }
 };
