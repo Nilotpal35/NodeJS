@@ -175,7 +175,8 @@ exports.postReset = (req, res, next) => {
 };
 
 exports.postResetPwd = (req, res, next) => {
-  const { token, tokenAge, password, cnfPassword, email } = req.body;
+  const { tokenAge, password, cnfPassword, email } = req.body;
+  const token = req.params.tokenId;
   let errorMessage = "";
   if (password !== cnfPassword) {
     errorMessage += "◉ Your password and confirm password is not macthing ";

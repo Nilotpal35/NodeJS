@@ -27,6 +27,6 @@ routes.post("/reset", postReset);
 
 routes.post("/logout", postLogout);
 
-routes.post("/reset-pwd", postResetPwd);
+routes.post("/reset-pwd/:tokenId", postResetPwd);
 
 exports.AuthRoute = routes;
