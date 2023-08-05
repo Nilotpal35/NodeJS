@@ -30,19 +30,22 @@ html(lang="en")
                     h2 Total items x #{cartQty} -
                     h2 $#{totalPrice}
                 div.cartContainer
-                    each product in prods
-                        div.cartProducts
-                            img.cartImage(src=product.imageUrl, alt=`${product.title}`,)
-                            p.cartTitle #{product.title} X #{product.qty} 
-                            div.cartBtnCtr
-                                form(action="/cart/delete", method="post")
-                                    input(type="hidden", name="_csrf" value=`${csrfToken}`)
-                                    input(type="hidden", name="prodId" , value=`${product._id}`)
-                                    button.cartButton(type="submit") Remove
-                                form(action="/product-detail", method="post")
-                                    input(type="hidden", name="_csrf" value=`${csrfToken}`)
-                                    input(type="hidden", name="prodId" , value=`${product._id}`)
-                                    button.cartButton(type="submit") Details
+                    if prods.length > 0
+                        each product in prods
+                            div.cartProducts
+                                img.cartImage(src=product.imageUrl, alt=`${product.title}`,)
+                                p.cartTitle #{product.title} X #{product.qty} 
+                                div.cartBtnCtr
+                                    form(action="/cart/delete", method="post")
+                                        input(type="hidden", name="_csrf" value=`${csrfToken}`)
+                                        input(type="hidden", name="prodId" , value=`${product._id}`)
+                                        button.cartButton(type="submit") Remove
+                                    form(action="/product-detail", method="post")
+                                        input(type="hidden", name="_csrf" value=`${csrfToken}`)
+                                        input(type="hidden", name="prodId" , value=`${product._id}`)
+                                        button.cartButton(type="submit") Details
+                    else 
+                        h2.title No items in the cart
                 div.hr
                 div.order
                     form(action="/order", method="post")

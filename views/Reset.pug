@@ -21,17 +21,15 @@ html(lang="en")
                     //- li.header_li
                     //-     a(href="/order") ORDER
         div.main_div
-            h2.title Login Form
-            form.form(action="/login" , method="POST") 
+            h2.title Reset Form
+            form.form(action="/reset" , method="POST") 
                 label(for="email") Email
                 input(type="email", name="email" , placeholder="email",value=`${formData && formData.email || ''}` required)
-                label(for="password") Password
-                input(type="password", name="password" , placeholder="password", required)
+                label(for="dob") DOB
+                input(type="date", name="dob" , placeholder="dd/mm/yyyy" value = `${formData && formData.dob || ''}`, required)
                 input(type="hidden", name="_csrf" value=`${csrfToken}`)
                 div.button-ctr
-                    button(type="submit") Login 
-                a.sign-link(href="/reset") Forgot Password? 
-                a.sign-link(href="/signup") New user? click here to sign up
+                    button(type="submit") Reset 
             if errorMessage 
                 p.error #{errorMessage}
         footer.main_footer

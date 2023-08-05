@@ -163,6 +163,7 @@ button {
   width: 100%;
 }
 
+
 .button {
   /* width : 30px; */
   background-color: rgb(95, 95, 95);
@@ -174,7 +175,8 @@ button {
   border-style: none;
 }
 
-.button:hover {
+.button:hover,
+button:hover  {
   background-color: #4a9691;
   color: #e4fc10;
 }

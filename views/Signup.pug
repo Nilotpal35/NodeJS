@@ -28,6 +28,8 @@ html(lang="en")
                 input(type="text", name="name" , placeholder="Name",value=`${formData&& formData.name || ''}`, required )
                 label(for="email") Email
                 input(type="text", name="email" , placeholder="email",value=`${formData&& formData.email || ''}` )
+                label(for="dob") DOB
+                input(type="date", name="dob" , placeholder="dd/mm/yyyy",value=`${formData&& formData.dob || ''}`, required)
                 label(for="password") Password
                 input(type="password", name="password" , placeholder="password",value=`${formData&& formData.password || ''}`, required)
                 label(for="cnfPassword") Confirm Password

@@ -56,6 +56,28 @@ class userDataModel {
       });
   }
 
+  static async updateUser(updatedData) {
+    // console.log("UPDATED USER DATA WITH TOKEN", updatedData);
+    const db = getDb();
+    //await new Promise((res) => setTimeout(res, 1000));
+    return db
+      .collection("user")
+      .updateOne(
+        { _id: updatedData._id },
+        {
+          $set: {
+            ...updatedData,
+          },
+        }
+      )
+      .then((res) => {
+        return res;
+      })
+      .catch((err) => {
+        throw err;
+      });
+  }
+
   static addCart(updatedData) {
     console.log("updated data", updatedData);
     const db = getDb();
