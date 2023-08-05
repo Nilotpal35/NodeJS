@@ -12,8 +12,9 @@ html(lang="en")
                     li.header_li
                         a.active(href="/") HOME
                     if isAuth
-                        li.header_li
-                            a(href="/admin/add-product") ADD-PRODUCT
+                        if isAdmin
+                            li.header_li
+                                a(href="/admin/add-product") ADD-PRODUCT
                         li.header_li
                             a(href="/products") PRODUCT
                         li.header_li
@@ -29,7 +30,7 @@ html(lang="en")
                     a(href='/login') Login
         div.main_div
             if errorMessage 
-                h1  #{errorMessage}
+                h1.success #{errorMessage}
             if isAuth 
                 h1.title USER AUTHENTICATED
             else 

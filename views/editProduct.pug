@@ -26,7 +26,7 @@ html(lang="en")
                     a(href='/login') Login
         div.main_div
             if isAuth
-                h2.title Edit Produt Form
+                h2.title Edit Product Form
                 form.form(action="/admin/edit-product" , method="POST")
                     input(type="hidden", name="_csrf" value=`${csrfToken}`)
                     input(type="hidden", name="_id" , value=product._id) 

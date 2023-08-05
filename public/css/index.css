@@ -320,3 +320,7 @@ button:hover  {
   background-color: transparent;
   color:#e4fc10;
 }
+
+.success {
+  color : #da4024;
+}

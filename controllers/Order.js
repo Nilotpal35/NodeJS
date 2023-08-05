@@ -21,6 +21,7 @@ exports.getOrder = (req, res, next) => {
               pageTitle: "Order",
               orders: refinedOrder,
               user: userInfo?.name,
+              isAdmin: userInfo?.admin === "true",
               isAuth: true,
             });
           })
@@ -66,6 +67,7 @@ exports.postOrder = (req, res, next) => {
               pageTitle: "Error",
               error: "Your cart is empty!",
               user: userInfo?.name,
+              isAdmin: userInfo?.admin === "true",
               isAuth: true,
             });
       })

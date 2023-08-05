@@ -18,6 +18,7 @@ const cookieParser = require("cookie-parser");
 // const {doubleCsrf} = require("csrf-csrf");
 const csrf = require("csurf");
 const flash = require("connect-flash");
+const isAdmin = require("./Auth/isAdmin");
 
 const MongoDbSession = require("connect-mongodb-session")(session);
 
@@ -110,7 +111,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use("/admin", isAuth, adminRoute.admin);
+app.use("/admin", isAuth, isAdmin, adminRoute.admin);
 
 app.use("/", AuthRoute);
 

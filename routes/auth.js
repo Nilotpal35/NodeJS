@@ -11,22 +11,22 @@ const {
   postResetPwd,
 } = require("../controllers/Auth");
 
-const routes = Router();
+const router = Router();
 
-routes.get("/login", getLogin);
+router.get("/login", getLogin);
 
-routes.get("/signup", getSignUp);
+router.get("/signup", getSignUp);
 
-routes.get("/reset", getReset);
+router.get("/reset", getReset);
 
-routes.post("/login", postLogin);
+router.post("/login", postLogin);
 
-routes.post("/signup", postSignUp);
+router.post("/signup", postSignUp);
 
-routes.post("/reset", postReset);
+router.post("/reset", postReset);
 
-routes.post("/logout", postLogout);
+router.post("/logout", postLogout);
 
-routes.post("/reset-pwd/:tokenId", postResetPwd);
+router.post("/reset-pwd/:tokenId", postResetPwd);
 
-exports.AuthRoute = routes;
+exports.AuthRoute = router;

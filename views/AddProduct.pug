@@ -27,7 +27,7 @@ html(lang="en")
                     a(href='/login') Login
         div.main_div
             if isAuth
-                h2.title Add Produt Form
+                h2.title Add Product Form
                 form.form(action="/admin/add-product" , method="POST") 
                     input(type="hidden", name="_csrf" value=`${csrfToken}`)
                     label(for="title") Title 
@@ -43,5 +43,7 @@ html(lang="en")
                         button(type="reset") Reset
             else 
                 h1.title You must have to login First
+            if errorMessage 
+                p.error #{errorMessage}
         footer.main_footer
             p &copy; 2023 Nilotpal &reg; MIT License

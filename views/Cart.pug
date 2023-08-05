@@ -12,8 +12,9 @@ html(lang="en")
                     li.header_li
                         a(href="/") HOME
                     if(isAuth)
-                        li.header_li
-                            a(href="/admin/add-product") ADD-PRODUCT
+                        if isAdmin
+                            li.header_li
+                                a(href="/admin/add-product") ADD-PRODUCT
                         li.header_li
                             a(href="/products") PRODUCT
                         li.header_li

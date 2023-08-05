@@ -77,7 +77,6 @@ exports.getProduct = (req, res, next) => {
           if (fetchedData) {
             products.push(...fetchedData);
           }
-
           res.render("Products", {
             pageTitle: "ProductPost",
             prods: products.sort((a, b) => {
@@ -88,6 +87,7 @@ exports.getProduct = (req, res, next) => {
               }
             }),
             user: userInfo?.name,
+            isAdmin: userInfo?.admin === "true",
             isAuth: true,
           });
         });
@@ -111,6 +111,7 @@ exports.getProductDetails = (req, res, next) => {
             pageTitle: "Product Detail",
             prod: [fetchedData],
             user: userInfo?.name,
+            isAdmin: userInfo?.admin === "true",
             isAuth: true,
           });
         });
@@ -180,6 +181,7 @@ exports.getCart = (req, res, next) => {
           .getCart(cartItems)
           .then((fetchedCart) => {
             //const cartQty = req.session?.user.cart
+
             const totalPricee = fetchedCart.reduce((acc, cur) => {
               const qty = userInfo.cart.find(
                 (item) => item.prodId.toString() === cur._id.toString()
@@ -192,22 +194,24 @@ exports.getCart = (req, res, next) => {
               ).qty;
               return { ...i, qty: qty };
             });
-            console.log(
-              "MODIFIED CART",
-              fetchedCart.sort((a, b) => {
-                if (a.title > b.title) {
-                  return 1;
-                } else {
-                  return -1;
-                }
-              })
-            );
+            const cartQty = fetchedCart.reduce((acc, curr) => {
+              return (acc = acc + curr.qty);
+            }, 0);
+
+            fetchedCart.sort((a, b) => {
+              if (a.title > b.title) {
+                return 1;
+              } else {
+                return -1;
+              }
+            });
             res.render("Cart", {
               pageTitle: "Cart",
               prods: fetchedCart,
-              cartQty: 0,
+              cartQty: cartQty,
               totalPrice: totalPricee,
               user: userInfo?.name,
+              isAdmin: userInfo?.admin === "true",
               isAuth: true,
             });
           })

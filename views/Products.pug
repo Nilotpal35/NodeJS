@@ -12,8 +12,9 @@ html(lang="en")
                     li.header_li
                         a(href="/") HOME
                     if isAuth
-                        li.header_li
-                            a(href="/admin/add-product") ADD-PRODUCT
+                        if isAdmin
+                            li.header_li
+                                a(href="/admin/add-product") ADD-PRODUCT
                         li.header_li
                             a.active(href="/products") PRODUCT
                         li.header_li
@@ -36,10 +37,11 @@ html(lang="en")
                                     input(type="hidden", name="_csrf" value=`${csrfToken}`) 
                                     input(type="hidden", name="prodId" , value=`${product._id}`)
                                     button.button(type="submit") Add
-                                form(action="/products/delete", method="post")
-                                    input(type="hidden", name="_csrf" value=`${csrfToken}`)
-                                    input(type="hidden", name="prodId" , value=`${product._id}`)
-                                    button.button(type="submit") Delete
+                                if isAdmin
+                                    form(action="/admin/delete", method="post")
+                                        input(type="hidden", name="_csrf" value=`${csrfToken}`)
+                                        input(type="hidden", name="prodId" , value=`${product._id}`)
+                                        button.button(type="submit") Delete
                                 form(action="/product-detail", method="post")
                                     input(type="hidden", name="_csrf" value=`${csrfToken}`)
                                     input(type="hidden", name="prodId" , value=`${product._id}`)
