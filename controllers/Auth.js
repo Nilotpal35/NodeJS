@@ -1,6 +1,7 @@
 const userDataModel = require("../models/userDataModel");
 const bcrypt = require("bcrypt");
 const crypto = require("crypto");
+const { validationResult, matchedData } = require("express-validator");
 
 exports.getLogin = (req, res, next) => {
   if (req.session?.userId) {
@@ -48,8 +49,10 @@ exports.postLogin = (req, res, next) => {
           }
         });
       } else {
-        res.render("Error", {
-          error: "◉ No user found!",
+        res.render("Login", {
+          pageTitle: "Login",
+          formData: { email },
+          errorMessage: "◉ Wrong email or password!",
         });
       }
     })
@@ -68,48 +71,33 @@ exports.postLogout = (req, res, next) => {
   });
 };
 
-exports.postSignUp = async (req, res, next) => {
+exports.postSignUp = (req, res, next) => {
   const { name, email, password, cnfPassword, dob } = req.body;
   let errorMessage = "";
-  const allUsers = [];
-  await userDataModel.getAllUsers().then((result) => {
-    allUsers.push(...result.map((item) => item.email));
+  const error = validationResult(req);
+  error.errors.map((item) => {
+    errorMessage += "◉ " + item.msg;
   });
-
-  if (email.includes("@") && allUsers.includes(email)) {
-    errorMessage += "◉ User already exist";
-  }
-  if (name.length < 5) {
-    errorMessage += "◉ Your name should be more than 5 characters ";
-  }
-  if (!email.includes("@")) {
-    errorMessage += "◉ Please type a proper mail id ";
-  }
-  if (password !== cnfPassword) {
-    errorMessage += "◉ Your password and confirm password is not macthing ";
-  }
-  if (dob.length !== 10) {
-    errorMessage += "◉ Please enter proper date in DD/MM/YYYY format";
-  }
-
-  if (
-    password !== cnfPassword ||
-    !email.includes("@") ||
-    name.length < 5 ||
-    allUsers.includes(email) ||
-    dob.length !== 10
-  ) {
+  if (errorMessage.trim().length > 0 && error.errors.length > 0) {
     res.render("Signup", {
       pageTitle: "Signup",
       errorMessage: errorMessage,
       formData: { name, email, password, cnfPassword, dob },
     });
   } else {
+    const data = matchedData(req);
+    console.log("data", data);
     bcrypt
       .hash(password, 12)
       .then((pwd) => {
         userDataModel
-          .newUser({ name, email, dob, password: pwd, cart: [] })
+          .newUser({
+            name: data.name,
+            email: data.email,
+            dob: data.dob,
+            password: data.pwd,
+            cart: [],
+          })
           .then(() => {
             req.flash("success", "◉ Successfully Signed Up!");
             res.redirect("/login");
@@ -130,77 +118,96 @@ exports.getReset = (req, res, next) => {
 
 exports.postReset = (req, res, next) => {
   const { email, dob } = req.body;
-  userDataModel
-    .getUserByEmail(email)
-    .then((result) => {
-      if (result) {
-        if (result.dob === dob) {
-          // console.log("USER MATCHED!", result.dob);
-          crypto.randomBytes(32, (err, buffer) => {
-            if (err) {
-              return res.redirect("/reset");
-            } else {
-              const token = buffer.toString("hex");
-              const tokenVaility = Date.now() + 1000 * 60 * 2;
-              userDataModel
-                .updateUser({ ...result, token, token, tokenVaility })
-                .then((output) => {
-                  res.render("ResetPassword", {
-                    pageTitle: "ResetPassword",
-                    resetToken: token,
-                    resetTokenValidity: tokenVaility,
-                    email: result?.email,
+  const error = validationResult(req);
+  let errorMessage = "";
+  error.errors.map((item) => {
+    errorMessage += "◉ " + item.msg;
+  });
+  if (errorMessage.trim().length > 0 && error.errors.length > 0) {
+    res.render("Reset", {
+      pageTitle: "Reset",
+      errorMessage: errorMessage,
+      formData: { email, dob },
+    });
+  } else {
+    const data = matchedData(req);
+    userDataModel
+      .getUserByEmail(data.email)
+      .then((userInfo) => {
+        if (userInfo) {
+          if (userInfo.dob === data.dob) {
+            crypto.randomBytes(32, (err, buffer) => {
+              if (err) {
+                res.redirect("/reset");
+              } else {
+                const token = buffer.toString("hex");
+                const tokenVaility = Date.now() + 1000 * 60 * 2;
+                userDataModel
+                  .updateUser({ ...userInfo, token, tokenVaility })
+                  .then((output) => {
+                    res.render("ResetPassword", {
+                      pageTitle: "ResetPassword",
+                      resetToken: token,
+                      resetTokenValidity: tokenVaility,
+                      email: userInfo?.email,
+                    });
+                  })
+                  .catch((err) => {
+                    throw err;
                   });
-                })
-                .catch((err) => {
-                  throw err;
-                });
-            }
-          });
+              }
+            });
+          } else {
+            req.flash("error", "◉ INVALID CREDENTIALS");
+            res.redirect("/reset");
+          }
         } else {
+          // res.render("Reset", {
+          //   pageTitle: "Reset",
+          //   errorMessage: "◉ NO USER FOUND!",
+          //   formData: { email, dob },
+          // });
           req.flash("error", "◉ INVALID CREDENTIALS");
           res.redirect("/reset");
         }
-      } else {
-        res.render("Reset", {
-          pageTitle: "Reset",
-          errorMessage: "◉ NO USER FOUND!",
-          formData: { email, dob },
-        });
-      }
-    })
-    .catch((err) => {
-      throw err;
-    });
+      })
+      .catch((err) => {
+        throw err;
+      });
+  }
 };
 
 exports.postResetPwd = (req, res, next) => {
   const { tokenAge, password, cnfPassword, email } = req.body;
-  const token = req.params.tokenId;
   let errorMessage = "";
-  if (password !== cnfPassword) {
-    errorMessage += "◉ Your password and confirm password is not macthing ";
+  const error = validationResult(req);
+  error.errors.map((item) => {
+    errorMessage += `\n ◉ ` + item.msg;
+  });
+  if (errorMessage.trim().length > 0 && error.errors.length > 0) {
     res.render("ResetPassword", {
       pageTitle: "ResetPassword",
-      resetToken: token,
+      resetToken: req.params.tokenId,
       resetTokenValidity: tokenAge,
       email: email,
       formData: { password, cnfPassword },
       errorMessage: errorMessage,
     });
-  } else if (password === cnfPassword) {
+  } else {
+    const token = req.params.tokenId;
     bcrypt
       .hash(password, 12)
       .then((pwd) => {
         userDataModel
           .getUserByEmail(email)
           .then((userInfo) => {
-            const { _id, name, email, dob, cart } = userInfo;
             if (
+              userInfo &&
               token === userInfo.token &&
               Date.now() < userInfo.tokenVaility &&
               +tokenAge === userInfo.tokenVaility
             ) {
+              const { _id, name, email, dob, cart } = userInfo;
               userDataModel
                 .updateUser({
                   _id,

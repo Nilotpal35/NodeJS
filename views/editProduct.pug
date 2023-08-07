@@ -29,7 +29,7 @@ html(lang="en")
                 h2.title Edit Product Form
                 form.form(action="/admin/edit-product" , method="POST")
                     input(type="hidden", name="_csrf" value=`${csrfToken}`)
-                    input(type="hidden", name="_id" , value=product._id) 
+                    input(type="hidden", name="_id" , value=product._id, ) 
                     label(for="title") Title 
                     input(type="text", name="title" , placeholder="title" value=product.title, required)
                     label(for="imageUrl") Image
@@ -43,5 +43,7 @@ html(lang="en")
                         button(type="reset") Reset
             else 
                 h1.title You must have to login First
+            if errorMessage 
+                p.error #{errorMessage}
         footer.main_footer
             p &copy; 2023 Nilotpal &reg; MIT License

@@ -1,3 +1,4 @@
+const { validationResult } = require("express-validator");
 const { newDataModel } = require("../models/cloudDataModel");
 const userDataModel = require("../models/userDataModel");
 const { ObjectId } = require("mongodb");
@@ -19,16 +20,42 @@ exports.getAddProduct = (req, res, next) => {
 exports.postAddProduct = (req, res, next) => {
   const { title, imageUrl, price, description } = req.body;
   const formData = { title, imageUrl, price, description };
-  const storeDb = new newDataModel();
-  storeDb
-    .store(formData)
-    .then((result) => {
-      console.log("NEW PRODUCT ADDED", result);
-      res.redirect("/products");
-    })
-    .catch((err) => {
-      throw err;
-    });
+  const error = validationResult(req);
+  let errorMessage = "";
+  error.errors.map((item) => {
+    errorMessage += `\n ◉ ` + item.msg;
+  });
+  if (errorMessage.trim().length > 0) {
+    if (req.session?.userId) {
+      userDataModel
+        .getUserById(req.session?.userId)
+        .then((userInfo) => {
+          res.status(404).render("AddProduct", {
+            pageTitle: "Add Product",
+            user: userInfo?.name,
+            formData: { title, imageUrl, price, description },
+            isAuth: true,
+            errorMessage: errorMessage,
+          });
+        })
+        .catch((err) => {
+          throw err;
+        });
+    } else {
+      res.redirect("/login");
+    }
+  } else {
+    const storeDb = new newDataModel();
+    storeDb
+      .store(formData)
+      .then((result) => {
+        console.log("NEW PRODUCT ADDED", result);
+        res.redirect("/products");
+      })
+      .catch((err) => {
+        throw err;
+      });
+  }
 };
 
 exports.getEditProduct = (req, res, body) => {
@@ -57,14 +84,40 @@ exports.getEditProduct = (req, res, body) => {
 exports.postEditProduct = (req, res, next) => {
   const { _id, title, imageUrl, price, description } = req.body;
   const formData = { title, imageUrl, price, description };
-  newDataModel
-    .editData(_id, formData)
-    .then(() => {
-      res.redirect("/products");
-    })
-    .catch((err) => {
-      throw err;
-    });
+  const error = validationResult(req);
+  let errorMessage = "";
+  error.errors.map((item) => {
+    errorMessage += `\n ◉ ` + item.msg;
+  });
+  if (errorMessage.trim().length > 0 && error.errors.length > 0) {
+    if (req.session?.userId) {
+      userDataModel
+        .getUserById(req.session?.userId)
+        .then((userInfo) => {
+          res.status(404).render("editProduct", {
+            pageTitle: "Edit Product",
+            user: userInfo?.name,
+            product: { ...formData, _id },
+            isAuth: true,
+            errorMessage: errorMessage,
+          });
+        })
+        .catch((err) => {
+          throw err;
+        });
+    } else {
+      res.redirect("/login");
+    }
+  } else {
+    newDataModel
+      .editData(_id, formData)
+      .then(() => {
+        res.redirect("/products");
+      })
+      .catch((err) => {
+        throw err;
+      });
+  }
 };
 
 exports.getProduct = (req, res, next) => {
