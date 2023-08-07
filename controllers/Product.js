@@ -6,14 +6,14 @@ const { ObjectId } = require("mongodb");
 exports.getAddProduct = (req, res, next) => {
   if (req.session?.userId) {
     userDataModel.getUserById(req.session?.userId).then((userInfo) => {
-      res.render("AddProduct", {
+      res.status(200).render("AddProduct", {
         pageTitle: "Add Product",
         user: userInfo?.name,
         isAuth: true,
       });
     });
   } else {
-    res.redirect("/login");
+    res.status(422).redirect("/login");
   }
 };
 
@@ -25,7 +25,7 @@ exports.postAddProduct = (req, res, next) => {
   error.errors.map((item) => {
     errorMessage += `\n ◉ ` + item.msg;
   });
-  if (errorMessage.trim().length > 0) {
+  if (errorMessage.trim().length > 0 && error.errors.length > 0) {
     if (req.session?.userId) {
       userDataModel
         .getUserById(req.session?.userId)
@@ -39,10 +39,10 @@ exports.postAddProduct = (req, res, next) => {
           });
         })
         .catch((err) => {
-          throw err;
+          next(err);
         });
     } else {
-      res.redirect("/login");
+      res.status(422).redirect("/login");
     }
   } else {
     const storeDb = new newDataModel();
@@ -50,10 +50,10 @@ exports.postAddProduct = (req, res, next) => {
       .store(formData)
       .then((result) => {
         console.log("NEW PRODUCT ADDED", result);
-        res.redirect("/products");
+        res.status(200).redirect("/products");
       })
       .catch((err) => {
-        throw err;
+        next(err);
       });
   }
 };
@@ -65,7 +65,7 @@ exports.getEditProduct = (req, res, body) => {
       .then((userInfo) => {
         const { prodId } = req.body;
         newDataModel.getDetails(prodId, (fetchedData) => {
-          res.render("editProduct", {
+          res.status(200).render("editProduct", {
             pageTitle: "Edit Product",
             product: fetchedData,
             user: userInfo?.name,
@@ -74,10 +74,10 @@ exports.getEditProduct = (req, res, body) => {
         });
       })
       .catch((err) => {
-        throw err;
+        next(err);
       });
   } else {
-    res.redirect("/login");
+    res.status(422).redirect("/login");
   }
 };
 
@@ -103,19 +103,19 @@ exports.postEditProduct = (req, res, next) => {
           });
         })
         .catch((err) => {
-          throw err;
+          next(err);
         });
     } else {
-      res.redirect("/login");
+      res.status(422).redirect("/login");
     }
   } else {
     newDataModel
       .editData(_id, formData)
       .then(() => {
-        res.redirect("/products");
+        res.status(200).redirect("/products");
       })
       .catch((err) => {
-        throw err;
+        next(err);
       });
   }
 };
@@ -130,7 +130,7 @@ exports.getProduct = (req, res, next) => {
           if (fetchedData) {
             products.push(...fetchedData);
           }
-          res.render("Products", {
+          res.status(200).render("Products", {
             pageTitle: "ProductPost",
             prods: products.sort((a, b) => {
               if (a.title > b.title) {
@@ -146,10 +146,10 @@ exports.getProduct = (req, res, next) => {
         });
       })
       .catch((err) => {
-        throw err;
+        next(err);
       });
   } else {
-    res.redirect("/login");
+    res.status(422).redirect("/login");
   }
 };
 
@@ -160,7 +160,7 @@ exports.getProductDetails = (req, res, next) => {
       .then((userInfo) => {
         const { prodId } = req.body;
         newDataModel.getDetails(prodId, (fetchedData) => {
-          res.render("ProductDetail", {
+          res.status(200).render("ProductDetail", {
             pageTitle: "Product Detail",
             prod: [fetchedData],
             user: userInfo?.name,
@@ -170,10 +170,10 @@ exports.getProductDetails = (req, res, next) => {
         });
       })
       .catch((err) => {
-        throw err;
+        next(err);
       });
   } else {
-    res.redirect("/login");
+    res.status(422).redirect("/login");
   }
 };
 
@@ -190,7 +190,6 @@ exports.addCart = async (req, res, next) => {
           const productFound = userInfo.cart.find(
             (item) => item.prodId.toString() === prodId.toString()
           );
-          console.log("product found", productFound);
           if (productFound) {
             const ExistingCartItem = userInfo.cart.filter(
               (item) => item.prodId !== productFound.prodId
@@ -202,21 +201,20 @@ exports.addCart = async (req, res, next) => {
             userInfo.cart.push({ prodId, qty: 1 });
           }
         }
-        console.log("ADD - CART", userInfo);
         userDataModel
           .addCart(userInfo)
           .then((result) => {
-            res.redirect("/cart");
+            res.status(200).redirect("/cart");
           })
           .catch((err) => {
-            throw err;
+            return next(err);
           });
       })
       .catch((err) => {
-        throw err;
+        next(err);
       });
   } else {
-    res.redirect("/login");
+    res.status(422).redirect("/login");
   }
 };
 
@@ -258,7 +256,7 @@ exports.getCart = (req, res, next) => {
                 return -1;
               }
             });
-            res.render("Cart", {
+            res.status(200).render("Cart", {
               pageTitle: "Cart",
               prods: fetchedCart,
               cartQty: cartQty,
@@ -269,18 +267,18 @@ exports.getCart = (req, res, next) => {
             });
           })
           .catch((err) => {
-            throw err;
+            return next(err);
           });
       })
       .catch((err) => {
-        throw err;
+        next(err);
       });
   } else {
     // res.render("Cart", {
     //   pageTitle: "Cart",
     //   isAuth: false,
     // });
-    res.redirect("/login");
+    res.status(422).redirect("/login");
   }
 };
 
@@ -289,10 +287,10 @@ exports.deleteProduct = (req, res, next) => {
   newDataModel
     .deleteProduct(prodId)
     .then(() => {
-      res.redirect("/products");
+      res.status(200).redirect("/products");
     })
     .catch((err) => {
-      throw err;
+      next(err);
     });
 };
 
@@ -306,7 +304,6 @@ exports.deleteCart = (req, res, next) => {
           const productFound = userInfo.cart.find(
             (item) => item.prodId.toString() === prodId.toString()
           );
-          console.log("product found", productFound);
           if (productFound) {
             const ExistingCartItem = userInfo.cart.filter(
               (item) => item.prodId !== productFound.prodId
@@ -322,19 +319,17 @@ exports.deleteCart = (req, res, next) => {
                 res.redirect("/cart");
               })
               .catch((err) => {
-                throw err;
+                return next(err);
               });
           } else {
-            console.log("product not found");
-            res.redirect("/cart");
+            res.status(404).redirect("/cart");
           }
         } else {
-          console.log("cart is empty");
-          res.redirect("/cart");
+          res.status(404).redirect("/cart");
         }
       })
       .catch((err) => {
-        throw err;
+        next(err);
       });
   }
 };

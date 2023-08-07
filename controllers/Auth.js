@@ -32,7 +32,7 @@ exports.postLogin = (req, res, next) => {
       if (userInfo) {
         bcrypt.compare(password, userInfo?.password).then((result) => {
           if (!result) {
-            res.render("Login", {
+            res.status(422).render("Login", {
               pageTitle: "Login",
               formData: { email },
               errorMessage: "◉ Wrong email or password!",
@@ -41,15 +41,15 @@ exports.postLogin = (req, res, next) => {
             req.session.userId = userInfo._id;
             req.session.save((err) => {
               if (err) {
-                console.log(err);
+                return next(err);
               }
               req.flash("success", "◉ Successfully logged in!");
-              res.redirect("/");
+              res.status(200).redirect("/");
             });
           }
         });
       } else {
-        res.render("Login", {
+        res.status(422).render("Login", {
           pageTitle: "Login",
           formData: { email },
           errorMessage: "◉ Wrong email or password!",
@@ -57,17 +57,17 @@ exports.postLogin = (req, res, next) => {
       }
     })
     .catch((err) => {
-      throw err;
+      next(err);
     });
 };
 
 exports.postLogout = (req, res, next) => {
   req.session.destroy((err) => {
     if (err) {
-      console.log(err);
+      next(err);
     }
     res.clearCookie("connect.sid");
-    res.redirect("/login");
+    res.status(200).redirect("/login");
   });
 };
 
@@ -79,14 +79,13 @@ exports.postSignUp = (req, res, next) => {
     errorMessage += "◉ " + item.msg;
   });
   if (errorMessage.trim().length > 0 && error.errors.length > 0) {
-    res.render("Signup", {
+    res.status(422).render("Signup", {
       pageTitle: "Signup",
       errorMessage: errorMessage,
       formData: { name, email, password, cnfPassword, dob },
     });
   } else {
     const data = matchedData(req);
-    console.log("data", data);
     bcrypt
       .hash(password, 12)
       .then((pwd) => {
@@ -100,17 +99,17 @@ exports.postSignUp = (req, res, next) => {
           })
           .then(() => {
             req.flash("success", "◉ Successfully Signed Up!");
-            res.redirect("/login");
+            res.status(200).redirect("/login");
           });
       })
       .catch((err) => {
-        throw err;
+        next(err);
       });
   }
 };
 
 exports.getReset = (req, res, next) => {
-  res.render("Reset", {
+  res.status(200).render("Reset", {
     pageTitle: "Reset",
     errorMessage: req.flash("error"),
   });
@@ -124,7 +123,7 @@ exports.postReset = (req, res, next) => {
     errorMessage += "◉ " + item.msg;
   });
   if (errorMessage.trim().length > 0 && error.errors.length > 0) {
-    res.render("Reset", {
+    res.status(422).render("Reset", {
       pageTitle: "Reset",
       errorMessage: errorMessage,
       formData: { email, dob },
@@ -138,14 +137,14 @@ exports.postReset = (req, res, next) => {
           if (userInfo.dob === data.dob) {
             crypto.randomBytes(32, (err, buffer) => {
               if (err) {
-                res.redirect("/reset");
+                res.status(422).redirect("/reset");
               } else {
                 const token = buffer.toString("hex");
                 const tokenVaility = Date.now() + 1000 * 60 * 2;
                 userDataModel
                   .updateUser({ ...userInfo, token, tokenVaility })
                   .then((output) => {
-                    res.render("ResetPassword", {
+                    res.status(200).render("ResetPassword", {
                       pageTitle: "ResetPassword",
                       resetToken: token,
                       resetTokenValidity: tokenVaility,
@@ -153,13 +152,13 @@ exports.postReset = (req, res, next) => {
                     });
                   })
                   .catch((err) => {
-                    throw err;
+                    return next(err);
                   });
               }
             });
           } else {
             req.flash("error", "◉ INVALID CREDENTIALS");
-            res.redirect("/reset");
+            res.status(422).redirect("/reset");
           }
         } else {
           // res.render("Reset", {
@@ -168,11 +167,11 @@ exports.postReset = (req, res, next) => {
           //   formData: { email, dob },
           // });
           req.flash("error", "◉ INVALID CREDENTIALS");
-          res.redirect("/reset");
+          res.status(422).redirect("/reset");
         }
       })
       .catch((err) => {
-        throw err;
+        next(err);
       });
   }
 };
@@ -185,7 +184,7 @@ exports.postResetPwd = (req, res, next) => {
     errorMessage += `\n ◉ ` + item.msg;
   });
   if (errorMessage.trim().length > 0 && error.errors.length > 0) {
-    res.render("ResetPassword", {
+    res.status(422).render("ResetPassword", {
       pageTitle: "ResetPassword",
       resetToken: req.params.tokenId,
       resetTokenValidity: tokenAge,
@@ -219,25 +218,25 @@ exports.postResetPwd = (req, res, next) => {
                 })
                 .then((feedback) => {
                   req.flash("success", "◉ Password reset successfull");
-                  res.redirect("/login");
+                  res.status(200).redirect("/login");
                 })
                 .catch((err) => {
-                  throw err;
+                  return next(err);
                 });
             } else {
               //res.redirect("/login");
-              res.render("Login", {
+              res.status(422).render("Login", {
                 pageTitle: "Login",
                 errorMessage: "Time out!",
               });
             }
           })
           .catch((err) => {
-            throw err;
+            return next(err);
           });
       })
       .catch((err) => {
-        throw err;
+        next(err);
       });
   }
 };

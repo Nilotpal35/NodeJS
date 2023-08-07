@@ -16,8 +16,7 @@ exports.getOrder = (req, res, next) => {
                 return { ...i, date: item.date };
               });
             });
-            console.log("fetchedOrder", refinedOrder);
-            res.render("Orders", {
+            res.status(200).render("Orders", {
               pageTitle: "Order",
               orders: refinedOrder,
               user: userInfo?.name,
@@ -26,15 +25,15 @@ exports.getOrder = (req, res, next) => {
             });
           })
           .catch((err) => {
-            throw err;
+            return next(err);
           });
       })
       .catch((err) => {
-        throw err;
+        next(err);
       });
   } else {
     //res.render("Orders", { pageTitle: "Order", isAuth: false });
-    res.redirect("/login");
+    res.status(404).redirect("/login");
   }
 };
 
@@ -53,17 +52,16 @@ exports.postOrder = (req, res, next) => {
               .getCart(cartItems)
               .then((fetchedCart) => {
                 orderDataModel.sentToOrder(userInfo._id, fetchedCart);
-                res.redirect("/order");
+                res.status(200).redirect("/order");
               })
               .then((res) => {
                 const updatedUser = { ...userInfo, cart: [] };
-                console.log("UPDATED USER", updatedUser);
                 userDataModel.removeCart(updatedUser);
               })
               .catch((err) => {
-                throw err;
+                return next(err);
               })
-          : res.render("Error", {
+          : res.status(200).render("Error", {
               pageTitle: "Error",
               error: "Your cart is empty!",
               user: userInfo?.name,
@@ -72,7 +70,7 @@ exports.postOrder = (req, res, next) => {
             });
       })
       .catch((err) => {
-        throw err;
+        next(err);
       });
   }
 };

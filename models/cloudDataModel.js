@@ -34,7 +34,6 @@ class newDataModel {
       .find({ _id: new ObjectId(prodId) })
       .next()
       .then((res) => {
-        console.log(res);
         cb(res);
       })
       .catch((err) => {
@@ -43,13 +42,11 @@ class newDataModel {
   }
 
   static editData(_id, formData) {
-    console.log("FORM DATA", formData);
     const db = getDb();
     return db
       .collection("product")
       .updateOne({ _id: new ObjectId(_id) }, { $set: formData })
       .then((res) => {
-        console.log("Updated!", res);
         return res;
       })
       .catch((err) => {
@@ -63,7 +60,6 @@ class newDataModel {
       .collection("product")
       .deleteOne({ _id: new ObjectId(_id) })
       .then((res) => {
-        console.log("Deleted Successfully!", res);
         return res;
       })
       .catch((err) => {
@@ -76,15 +72,11 @@ class newDataModel {
     db.collection("product")
       .findOne({ _id: new ObjectId(prodId) })
       .then((res) => {
-        console.log("Item added into cart!", res);
         db.collection("product")
           .updateOne(
             { _id: new ObjectId(prodId) },
             { $set: { ...res, cart: action } }
           )
-          .then((res2) => {
-            console.log("succesfully updated", res2);
-          })
           .catch((err2) => {
             throw err2;
           });
@@ -100,7 +92,6 @@ class newDataModel {
       .find({ cart: true })
       .toArray()
       .then((res) => {
-        console.log("CART PRODUCTS", res);
         cb(res);
       })
       .catch((err) => {

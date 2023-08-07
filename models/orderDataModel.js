@@ -10,16 +10,12 @@ class orderDataModel {
         details: cartItems,
         date: new Date().toJSON(),
       })
-      .then((res) => {
-        console.log(res);
-      })
       .catch((err) => {
         throw err;
       });
   }
 
   static getOrder(userId) {
-    console.log("userId", userId);
     const db = getDb();
     return db
       .collection("order")

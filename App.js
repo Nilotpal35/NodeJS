@@ -127,6 +127,14 @@ app.use("/", homeRoute);
 
 app.use(getErrorPage);
 
+app.use((err, req, res, next) => {
+  console.log("inside universal error page", err);
+  res.status(500).render("BackendError", {
+    pageTitle: "Backend Error",
+    errorMessage: "null",
+  });
+});
+
 MongoConnect(() => {
   app.listen(8080);
 });

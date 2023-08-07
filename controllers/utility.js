@@ -5,7 +5,7 @@ exports.getHomePage = (req, res, next) => {
     userDataModel
       .getUserById(req.session?.userId)
       .then((userInfo) => {
-        res.render("Home", {
+        res.status(200).render("Home", {
           pageTitle: "Home",
           user: userInfo.name,
           isAuth: true,
@@ -14,10 +14,10 @@ exports.getHomePage = (req, res, next) => {
         });
       })
       .catch((err) => {
-        throw err;
+        next(err);
       });
   } else {
-    res.render("Home", {
+    res.status(422).render("Home", {
       pageTitle: "Home",
       isAuth: false,
       errorMessage: req.flash("success"),
@@ -30,7 +30,7 @@ exports.getErrorPage = (req, res, next) => {
     userDataModel
       .getUserById(req.session?.userId)
       .then((userInfo) => {
-        res.render("Error", {
+        res.status(404).render("Error", {
           pageTitle: "Error 404",
           user: userInfo.name,
           isAdmin: userInfo?.admin === "true",
@@ -38,10 +38,10 @@ exports.getErrorPage = (req, res, next) => {
         });
       })
       .catch((err) => {
-        throw err;
+        next(err);
       });
   } else {
-    res.render("Error", {
+    res.status(422).render("Error", {
       pageTitle: "Error",
       isAuth: false,
     });

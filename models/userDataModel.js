@@ -79,7 +79,6 @@ class userDataModel {
   }
 
   static addCart(updatedData) {
-    console.log("updated data", updatedData);
     const db = getDb();
     return db
       .collection("user")
@@ -95,7 +94,6 @@ class userDataModel {
         }
       )
       .then((res) => {
-        console.log("item added into cart successfully", res);
         return res;
       })
       .catch((err) => {
@@ -128,7 +126,6 @@ class userDataModel {
         }
       )
       .then((res) => {
-        console.log("Cart item removed successfully", res);
         return res;
       })
       .catch((err) => {
