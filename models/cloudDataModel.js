@@ -42,11 +42,13 @@ class newDataModel {
   }
 
   static editData(_id, formData) {
+    console.log("EDIT FORM DATA", _id, formData);
     const db = getDb();
     return db
       .collection("product")
       .updateOne({ _id: new ObjectId(_id) }, { $set: formData })
       .then((res) => {
+        console.log("EDIT DATA UPDATE SUCCESSFULL", res);
         return res;
       })
       .catch((err) => {

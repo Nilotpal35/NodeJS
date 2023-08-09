@@ -34,7 +34,7 @@ html(lang="en")
                     if prods.length > 0
                         each product in prods
                             div.cartProducts
-                                img.cartImage(src=product.imageUrl, alt=`${product.title}`,)
+                                img.cartImage(src=product.imageUrl[0], alt=`${product.title}`,)
                                 p.cartTitle #{product.title} X #{product.qty} 
                                 div.cartBtnCtr
                                     form(action="/cart/delete", method="post")

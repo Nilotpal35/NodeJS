@@ -48,6 +48,7 @@ app.use(body_parser.urlencoded({ extended: false }));
 
 //middleware for serve static CSS/JS files  in public folder
 app.use(express.static("public"));
+app.use(express.static("images"));
 
 //mongodb-session
 const store = new MongoDbSession({
@@ -104,12 +105,12 @@ app.use(nocache());
 
 //middleware for CSRF
 // app.use(doubleCsrfProtection);
-app.use(csrf());
+// app.use(csrf());
 
-app.use((req, res, next) => {
-  res.locals.csrfToken = req.csrfToken();
-  next();
-});
+// app.use((req, res, next) => {
+//   res.locals.csrfToken = req.csrfToken();
+//   next();
+// });
 
 app.use("/admin", isAuth, isAdmin, adminRoute.admin);
 

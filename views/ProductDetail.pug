@@ -30,7 +30,7 @@ html(lang="en")
                 div.container
                     each product in prod
                         div.productDetail
-                            img.dimage(src=product.imageUrl, alt=`${product}`,)
+                            img.dimage(src=product.imageUrl[0], alt=`${product}`,)
                             p.dtitle #{product.title}
                             p.dtitle #{product.price}
                             p.dtitle #{product.description}

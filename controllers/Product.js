@@ -17,9 +17,14 @@ exports.getAddProduct = (req, res, next) => {
   }
 };
 
-exports.postAddProduct = (req, res, next) => {
-  const { title, imageUrl, price, description } = req.body;
-  const formData = { title, imageUrl, price, description };
+exports.postAddProduct = async (req, res, next) => {
+  const { title, price, description } = req.body;
+  const formData = {
+    title,
+    imageUrl: req.file && req.file,
+    price,
+    description,
+  };
   const error = validationResult(req);
   let errorMessage = "";
   error.errors.map((item) => {
@@ -33,7 +38,7 @@ exports.postAddProduct = (req, res, next) => {
           res.status(404).render("AddProduct", {
             pageTitle: "Add Product",
             user: userInfo?.name,
-            formData: { title, imageUrl, price, description },
+            formData: { title, price, description },
             isAuth: true,
             errorMessage: errorMessage,
           });
@@ -65,6 +70,7 @@ exports.getEditProduct = (req, res, body) => {
       .then((userInfo) => {
         const { prodId } = req.body;
         newDataModel.getDetails(prodId, (fetchedData) => {
+          console.log("FETCHED DATA", fetchedData);
           res.status(200).render("editProduct", {
             pageTitle: "Edit Product",
             product: fetchedData,
@@ -82,8 +88,13 @@ exports.getEditProduct = (req, res, body) => {
 };
 
 exports.postEditProduct = (req, res, next) => {
-  const { _id, title, imageUrl, price, description } = req.body;
-  const formData = { title, imageUrl, price, description };
+  const { _id, imageUrl, title, price, description } = req.body;
+  const formData = {
+    title,
+    imageUrl: req.file[0] === "" ? imageUrl : req.file,
+    price,
+    description,
+  };
   const error = validationResult(req);
   let errorMessage = "";
   error.errors.map((item) => {

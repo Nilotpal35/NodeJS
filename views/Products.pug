@@ -30,7 +30,8 @@ html(lang="en")
                 div.container
                     each product in prods
                         div.products
-                            img.image(src=product.imageUrl, alt=`${product.title}`,)
+                            img.image(src=product.imageUrl[0], alt=product.title,)
+                            //- p.title #{image}
                             p.title #{product.title}
                             div.btnCtr
                                 form(action="/cart/add-cart", method="post")

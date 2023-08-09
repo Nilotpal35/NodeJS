@@ -32,7 +32,7 @@ html(lang="en")
                         each product in orders
                             h2.date #{new Date(product.date).toLocaleString()}
                             div.cartProducts
-                                img.cartImage(src=product.imageUrl, alt=`${product.title}`,)
+                                img.cartImage(src=product.imageUrl[0], alt=`${product.title}`,)
                                 p.cartTitle #{product.title} 
                                 div.cartBtnCtr
                                 //- form(action="/product-detail", method="post")
