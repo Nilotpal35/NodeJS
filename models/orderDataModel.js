@@ -28,6 +28,7 @@ class orderDataModel {
         throw err;
       });
   }
+
 }
 
 exports.orderDataModel = orderDataModel;
