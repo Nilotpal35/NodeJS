@@ -146,12 +146,18 @@ exports.postEditProduct = (req, res, next) => {
 };
 
 exports.getProduct = (req, res, next) => {
+  console.log("query", req.query);
+  let skip = 0;
+  let page = 1;
+  if (req.query?.page) {
+    skip = req.query?.page - 1;
+  }
   const products = [];
   if (req.session?.userId) {
     userDataModel
       .getUserById(req.session?.userId)
       .then((userInfo) => {
-        newDataModel.getData((fetchedData) => {
+        newDataModel.getData(skip, page, (fetchedData) => {
           if (fetchedData) {
             products.push(...fetchedData);
           }

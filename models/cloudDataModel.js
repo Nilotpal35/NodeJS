@@ -15,10 +15,13 @@ class newDataModel {
       });
   }
 
-  static getData(cb) {
+  static getData(skip, page, cb) {
     const db = getDb();
     db.collection("product")
-      .find()
+      .find({})
+      .sort({ title: 1 })
+      .skip(skip)
+      .limit(page)
       .toArray()
       .then((res) => {
         cb(res);
