@@ -28,6 +28,19 @@ class orderDataModel {
         throw err;
       });
   }
+
+  static getOrderWithOrderId(orderId) {
+    const db = getDb();
+    return db
+      .collection("order")
+      .findOne({ _id: new ObjectId(orderId) })
+      .then((res) => {
+        return res;
+      })
+      .catch((err) => {
+        throw err;
+      });
+  }
 }
 
 exports.orderDataModel = orderDataModel;

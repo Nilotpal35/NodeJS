@@ -37,6 +37,7 @@ html(lang="en")
                                 div.cartBtnCtr
                                 form(action=`/order/${product._id}`, method="post")
                                     input(type="hidden", name="userId" , value=`${product.userId}`)
+                                    input(type="hidden", name="orderId" , value=`${product.orderId}`)
                                     button.cartButton(type="submit") Invoice
                     else 
                         h2.title No order history found!

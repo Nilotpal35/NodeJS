@@ -1,4 +1,5 @@
 const userDataModel = require("../models/userDataModel");
+const fs = require("fs");
 
 exports.getHomePage = (req, res, next) => {
   if (req.session?.userId) {
@@ -26,7 +27,7 @@ exports.getHomePage = (req, res, next) => {
 };
 
 exports.getErrorPage = (req, res, next) => {
-  if (req.session?.user) {
+  if (req.session?.userId) {
     userDataModel
       .getUserById(req.session?.userId)
       .then((userInfo) => {
@@ -46,4 +47,13 @@ exports.getErrorPage = (req, res, next) => {
       isAuth: false,
     });
   }
+};
+
+exports.unlinkFile = (filePath) => {
+  fs.unlink(filePath, (err) => {
+    if (err) {
+      throw err.message;
+    }
+    console.log("File deleted successfully");
+  });
 };

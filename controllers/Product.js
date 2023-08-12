@@ -2,6 +2,8 @@ const { validationResult, matchedData } = require("express-validator");
 const { newDataModel } = require("../models/cloudDataModel");
 const userDataModel = require("../models/userDataModel");
 const { ObjectId } = require("mongodb");
+const { unlinkFile } = require("./utility");
+const path = require("path");
 
 exports.getAddProduct = (req, res, next) => {
   if (req.session?.userId) {
@@ -307,14 +309,21 @@ exports.getCart = (req, res, next) => {
 
 exports.deleteProduct = (req, res, next) => {
   const { prodId } = req.body;
-  newDataModel
-    .deleteProduct(prodId)
-    .then(() => {
-      res.status(200).redirect("/products");
-    })
-    .catch((err) => {
-      next(err);
+  try {
+    newDataModel.getDetails(prodId, (prodDetail) => {
+      unlinkFile(path.join("store", "images", prodDetail.imageUrl));
+      newDataModel
+        .deleteProduct(prodId)
+        .then(() => {
+          res.status(200).redirect("/products");
+        })
+        .catch((err) => {
+          return next(err);
+        });
     });
+  } catch (error) {
+    next(error.message);
+  }
 };
 
 exports.deleteCart = (req, res, next) => {
