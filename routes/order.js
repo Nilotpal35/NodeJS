@@ -1,7 +1,15 @@
 const express = require("express");
 const { getOrder, postOrder } = require("../controllers/Order");
-const { check, param, body, validationResult } = require("express-validator");
+const {
+  check,
+  param,
+  body,
+  validationResult,
+  matchedData,
+} = require("express-validator");
 const userDataModel = require("../models/userDataModel");
+const PDFDocument = require("pdfkit");
+const { newDataModel } = require("../models/cloudDataModel");
 
 const router = express.Router();
 
@@ -38,6 +46,26 @@ router.post(
     if (errorMessage.trim().length > 0 && error.errors.length > 0) {
       next(new Error(errorMessage));
     } else {
+      const data = matchedData(req);
+      console.log("alright", data.prodId, data.userId);
+      // newDataModel.getDetails(data.prodId, (prodDetail) => {
+      //   if (prodDetail) {
+      //     console.log("prod details", prodDetail);
+      //     const doc = new PDFDocument();
+      //     const filename = prodDetail.title + ".pdf";
+      //     res.setHeader(
+      //       "Content-disposition",
+      //       'inline; filename="' + filename + '"'
+      //     );
+      //     res.setHeader("Content-type", "application/pdf");
+      //     doc.text(prodDetail.description);
+      //     doc.pipe(res);
+      //     // doc.pipe();
+      //     doc.end();
+      //   } else {
+      //     return next(new Error("No product found!"));
+      //   }
+      // });
     }
   }
 );
