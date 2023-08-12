@@ -28,14 +28,14 @@ html(lang="en")
         div.main_div
             if isAuth
                 h2.title Add Product Form
-                form.form(action="/admin/add-product" , method="POST") 
+                form.form(action="/admin/add-product" , method="POST", enctype="multipart/form-data") 
                     input(type="hidden", name="_csrf" value=`${csrfToken}`)
                     label(for="title") Title 
                     input(type="text", name="title" , placeholder="title" value=`${formData && formData.title || ''}`, required)
                     label(for="imageUrl") Image
-                    input(type="text", name="imageUrl" , placeholder="image" value=`${formData && formData.imageUrl || ''}`, required)
+                    input(type="file", name="imageUrl" , placeholder="image" ,)
                     label(for="price") Price 
-                    input(type="text", name="price" ,id="price",placeholder="price" step="0.01" value=`${formData && formData.price || ''}`, required)
+                    input(type="number", name="price" ,id="price",placeholder="price" step="0.01" value=`${formData && formData.price || ''}`, required)
                     label(for="description") Description 
                     textarea(name="description", cols="20",id="description", rows="5" placeholder="description" , required) #{formData && formData.description || ''}
                     div.button-ctr

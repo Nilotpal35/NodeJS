@@ -11,11 +11,17 @@ exports.getOrder = (req, res, next) => {
         orderDataModel
           .getOrder(_id.toString())
           .then((fetchedOrder) => {
+            console.log("fetched order", fetchedOrder);
             const refinedOrder = fetchedOrder.flatMap((item) => {
               return item.details.map((i) => {
-                return { ...i, date: item.date };
+                return {
+                  ...i,
+                  date: item.date,
+                  userId: item.userid.toString(),
+                };
               });
             });
+            console.log("refined order", refinedOrder);
             res.status(200).render("Orders", {
               pageTitle: "Order",
               orders: refinedOrder,
@@ -74,3 +80,5 @@ exports.postOrder = (req, res, next) => {
       });
   }
 };
+
+exports.postInvoice = (req, res, next) => {};

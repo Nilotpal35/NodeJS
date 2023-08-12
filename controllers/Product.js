@@ -1,4 +1,4 @@
-const { validationResult } = require("express-validator");
+const { validationResult, matchedData } = require("express-validator");
 const { newDataModel } = require("../models/cloudDataModel");
 const userDataModel = require("../models/userDataModel");
 const { ObjectId } = require("mongodb");
@@ -18,8 +18,7 @@ exports.getAddProduct = (req, res, next) => {
 };
 
 exports.postAddProduct = (req, res, next) => {
-  const { title, imageUrl, price, description } = req.body;
-  const formData = { title, imageUrl, price, description };
+  const { title, price, description } = req.body;
   const error = validationResult(req);
   let errorMessage = "";
   error.errors.map((item) => {
@@ -33,7 +32,7 @@ exports.postAddProduct = (req, res, next) => {
           res.status(404).render("AddProduct", {
             pageTitle: "Add Product",
             user: userInfo?.name,
-            formData: { title, imageUrl, price, description },
+            formData: { title, price, description },
             isAuth: true,
             errorMessage: errorMessage,
           });
@@ -45,6 +44,14 @@ exports.postAddProduct = (req, res, next) => {
       res.status(422).redirect("/login");
     }
   } else {
+    console.log("Everything is fine in file upload");
+    const data = matchedData(req);
+    const formData = {
+      title: data.title,
+      imageUrl: req.file?.filename,
+      price: data.price,
+      description: data.description,
+    };
     const storeDb = new newDataModel();
     storeDb
       .store(formData)
@@ -69,6 +76,7 @@ exports.getEditProduct = (req, res, body) => {
             pageTitle: "Edit Product",
             product: fetchedData,
             user: userInfo?.name,
+            prodId: prodId,
             isAuth: true,
           });
         });
@@ -82,8 +90,8 @@ exports.getEditProduct = (req, res, body) => {
 };
 
 exports.postEditProduct = (req, res, next) => {
-  const { _id, title, imageUrl, price, description } = req.body;
-  const formData = { title, imageUrl, price, description };
+  const { _id, prodId, title, price, description } = req.body;
+  const form = { title, price, description };
   const error = validationResult(req);
   let errorMessage = "";
   error.errors.map((item) => {
@@ -97,7 +105,8 @@ exports.postEditProduct = (req, res, next) => {
           res.status(404).render("editProduct", {
             pageTitle: "Edit Product",
             user: userInfo?.name,
-            product: { ...formData, _id },
+            product: { ...form, _id },
+            prodId: prodId,
             isAuth: true,
             errorMessage: errorMessage,
           });
@@ -109,14 +118,28 @@ exports.postEditProduct = (req, res, next) => {
       res.status(422).redirect("/login");
     }
   } else {
-    newDataModel
-      .editData(_id, formData)
-      .then(() => {
-        res.status(200).redirect("/products");
-      })
-      .catch((err) => {
-        next(err);
+    const data = matchedData(req);
+    try {
+      newDataModel.getDetails(req.body.prodId, (prodDetails) => {
+        const formData = {
+          title: (data.title && data.title) || prodDetails.title,
+          imageUrl: req.file ? req.file?.filename : prodDetails.imageUrl,
+          price: (data.price && data.price) || prodDetails.price,
+          description:
+            (data.description && data.description) || prodDetails.description,
+        };
+        newDataModel
+          .editData(_id, formData)
+          .then(() => {
+            res.status(200).redirect("/products");
+          })
+          .catch((err) => {
+            return next(err);
+          });
       });
+    } catch (error) {
+      next(error.message);
+    }
   }
 };
 

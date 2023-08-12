@@ -27,13 +27,14 @@ html(lang="en")
         div.main_div
             if isAuth
                 h2.title Edit Product Form
-                form.form(action="/admin/edit-product" , method="POST")
+                form.form(action="/admin/edit-product" , method="POST", enctype = "multipart/form-data")
                     input(type="hidden", name="_csrf" value=`${csrfToken}`)
+                    input(type="hidden", name="prodId" , value=prodId, ) 
                     input(type="hidden", name="_id" , value=product._id, ) 
                     label(for="title") Title 
                     input(type="text", name="title" , placeholder="title" value=product.title, required)
                     label(for="imageUrl") Image
-                    input(type="text", name="imageUrl" , placeholder="image" value=product.imageUrl, required)
+                    input(type="file", name="imageUrl" , placeholder="image" ,)
                     label(for="price") Price 
                     input(type="number", name="price" ,id="price",placeholder="price" step="0.01" value=product.price, required)
                     label(for="description") Description 
