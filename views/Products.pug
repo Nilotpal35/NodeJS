@@ -46,10 +46,12 @@ html(lang="en")
                                     input(type="hidden", name="_csrf" value=`${csrfToken}`)
                                     input(type="hidden", name="prodId" , value=`${product._id}`)
                                     button.button(type="submit") Details
-                .pagination 
-                    a.page(href=`/products?page=${1}`) #{1}
-                    a.page(href=`/products?page=${2}`) #{2}
-                    a.page(href=`/products?page=${3}`) #{3}
+                .pagination
+                    each page in totalPages
+                        if page === currentPage 
+                            a.current(href=`/products?page=${page}`) #{page}
+                        else 
+                            a.page(href=`/products?page=${page}`) #{page} 
             else 
                 h1.title You must have to login First
         footer.main_footer

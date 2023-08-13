@@ -23,7 +23,7 @@ const storage = multer.diskStorage({
 });
 
 const fileFilter = (req, file, cb) => {
-  const acceptedTypes = [".png", ".jpg", ".jpeg", ".gif"];
+  const acceptedTypes = [".png", ".jpg", ".jpeg", ".gif", ".avif"];
   const extName = path.extname(file?.originalname).toLowerCase();
   if (acceptedTypes.includes(extName)) {
     cb(null, true);
@@ -45,7 +45,7 @@ router.post(
     check("title")
       .trim()
       .notEmpty()
-      .isLength({ min: 5, max: 10 })
+      .isLength({ min: 5 })
       .withMessage("Title should be in 5 to 10 letter"),
     // check("imageUrl")
     //   .trim()

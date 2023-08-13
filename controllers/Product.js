@@ -5,6 +5,7 @@ const { ObjectId } = require("mongodb");
 const { unlinkFile } = require("./utility");
 const path = require("path");
 
+
 exports.getAddProduct = (req, res, next) => {
   if (req.session?.userId) {
     userDataModel.getUserById(req.session?.userId).then((userInfo) => {
@@ -49,7 +50,7 @@ exports.postAddProduct = (req, res, next) => {
     console.log("Everything is fine in file upload");
     const data = matchedData(req);
     const formData = {
-      title: data.title,
+      title: data.title.toUpperCase(),
       imageUrl: req.file?.filename,
       price: data.price,
       description: data.description,
@@ -124,7 +125,7 @@ exports.postEditProduct = (req, res, next) => {
     try {
       newDataModel.getDetails(req.body.prodId, (prodDetails) => {
         const formData = {
-          title: (data.title && data.title) || prodDetails.title,
+          title: (data.title && data.title.toUpperCase()) || prodDetails.title,
           imageUrl: req.file ? req.file?.filename : prodDetails.imageUrl,
           price: (data.price && data.price) || prodDetails.price,
           description:
@@ -146,35 +147,51 @@ exports.postEditProduct = (req, res, next) => {
 };
 
 exports.getProduct = (req, res, next) => {
-  console.log("query", req.query);
-  let skip = 0;
-  let page = 1;
-  if (req.query?.page) {
-    skip = req.query?.page - 1;
-  }
   const products = [];
+  let SKIP_PRODUCTS = 0;
+  if (req.query?.page) {
+    SKIP_PRODUCTS = (req.query?.page - 1) * 2;
+  }
+
   if (req.session?.userId) {
     userDataModel
       .getUserById(req.session?.userId)
       .then((userInfo) => {
-        newDataModel.getData(skip, page, (fetchedData) => {
-          if (fetchedData) {
-            products.push(...fetchedData);
-          }
-          res.status(200).render("Products", {
-            pageTitle: "ProductPost",
-            prods: products.sort((a, b) => {
-              if (a.title > b.title) {
-                return 1;
-              } else {
-                return -1;
+        newDataModel
+          .getTotalProducts()
+          .then((result) => {
+            const TOTAL_PRODUCTS_ARRAY = [];
+            for (let i = 1; i <= Math.ceil(result / 2); i++) {
+              TOTAL_PRODUCTS_ARRAY.push(i);
+            }
+            return TOTAL_PRODUCTS_ARRAY;
+          })
+          .then((TOTAL_PRODUCTS_ARRAY) => {
+            console.log("TOTAL PAGES", TOTAL_PRODUCTS_ARRAY);
+            newDataModel.getData(SKIP_PRODUCTS, (fetchedData) => {
+              if (fetchedData) {
+                products.push(...fetchedData);
               }
-            }),
-            user: userInfo?.name,
-            isAdmin: userInfo?.admin === "true",
-            isAuth: true,
+              res.status(200).render("Products", {
+                pageTitle: "ProductPost",
+                prods: products.sort((a, b) => {
+                  if (a.title > b.title) {
+                    return 1;
+                  } else {
+                    return -1;
+                  }
+                }),
+                user: userInfo?.name,
+                isAdmin: userInfo?.admin === "true",
+                isAuth: true,
+                totalPages: TOTAL_PRODUCTS_ARRAY,
+                currentPage: +req.query?.page,
+              });
+            });
+          })
+          .catch((err) => {
+            return next(err);
           });
-        });
       })
       .catch((err) => {
         next(err);

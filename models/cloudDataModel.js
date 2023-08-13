@@ -15,13 +15,19 @@ class newDataModel {
       });
   }
 
-  static getData(skip, page, cb) {
+  static getTotalProducts() {
+    const db = getDb();
+    return db.collection("product").countDocuments();
+  }
+
+  static getData(skip, cb) {
     const db = getDb();
     db.collection("product")
       .find({})
+      // .collation({ locale: "en", strength: 2 })
       .sort({ title: 1 })
       .skip(skip)
-      .limit(page)
+      .limit(2)
       .toArray()
       .then((res) => {
         cb(res);
