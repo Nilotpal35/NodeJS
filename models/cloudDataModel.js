@@ -17,7 +17,15 @@ class newDataModel {
 
   static getTotalProducts() {
     const db = getDb();
-    return db.collection("product").countDocuments();
+    return db
+      .collection("product")
+      .countDocuments()
+      .then((res) => {
+        return res;
+      })
+      .catch((err) => {
+        throw err;
+      });
   }
 
   static getData(skip, cb) {
