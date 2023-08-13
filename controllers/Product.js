@@ -5,7 +5,6 @@ const { ObjectId } = require("mongodb");
 const { unlinkFile } = require("./utility");
 const path = require("path");
 
-
 exports.getAddProduct = (req, res, next) => {
   if (req.session?.userId) {
     userDataModel.getUserById(req.session?.userId).then((userInfo) => {
@@ -150,7 +149,7 @@ exports.getProduct = (req, res, next) => {
   const products = [];
   let SKIP_PRODUCTS = 0;
   if (req.query?.page) {
-    SKIP_PRODUCTS = (req.query?.page - 1) * 2;
+    SKIP_PRODUCTS = (req.query?.page - 1) * 3;
   }
 
   if (req.session?.userId) {
@@ -161,13 +160,13 @@ exports.getProduct = (req, res, next) => {
           .getTotalProducts()
           .then((result) => {
             const TOTAL_PRODUCTS_ARRAY = [];
-            for (let i = 1; i <= Math.ceil(result / 2); i++) {
+            for (let i = 1; i <= Math.ceil(result / 3); i++) {
               TOTAL_PRODUCTS_ARRAY.push(i);
             }
             return TOTAL_PRODUCTS_ARRAY;
           })
           .then((TOTAL_PRODUCTS_ARRAY) => {
-            console.log("TOTAL PAGES", TOTAL_PRODUCTS_ARRAY);
+            // console.log("TOTAL PAGES", TOTAL_PRODUCTS_ARRAY);
             newDataModel.getData(SKIP_PRODUCTS, (fetchedData) => {
               if (fetchedData) {
                 products.push(...fetchedData);
@@ -331,17 +330,20 @@ exports.getCart = (req, res, next) => {
 };
 
 exports.deleteProduct = (req, res, next) => {
-  const { prodId } = req.body;
+  const { prodId } = req.params;
+  console.log("PROD ID IN SERVER", prodId);
   try {
     newDataModel.getDetails(prodId, (prodDetail) => {
       unlinkFile(path.join("store", "images", prodDetail.imageUrl));
       newDataModel
-        .deleteProduct(prodId)
+        .deleteProduct(prodId.toString())
         .then(() => {
-          res.status(200).redirect("/products");
+          res.status(200).json({ message: "Success!" });
+          // res.status(200).redirect("/products");
         })
         .catch((err) => {
-          return next(err);
+          res.status(404).json({ message: "Failure" });
+          // return next(err);
         });
     });
   } catch (error) {

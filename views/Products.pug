@@ -5,6 +5,7 @@ html(lang="en")
         meta(name="viewport", content="width=device-width, initial-scale=1.0")
         title #{pageTitle}
         link(rel="stylesheet", href="/css/index.css")
+        script(src="/js/admin.js") 
     body
         header.header_main 
             nav.header_nav
@@ -38,10 +39,10 @@ html(lang="en")
                                     input(type="hidden", name="prodId" , value=`${product._id}`)
                                     button.button(type="submit") Add
                                 if isAdmin
-                                    form(action="/admin/delete", method="post")
-                                        input(type="hidden", name="_csrf" value=`${csrfToken}`)
-                                        input(type="hidden", name="prodId" , value=`${product._id}`)
-                                        button.button(type="submit") Delete
+                                    //- form(action="/admin/delete", method="post")
+                                    input(type="hidden", name="_csrf" value=`${csrfToken}`)
+                                    input(type="hidden", name="prodId" , value=`${product._id}`)
+                                    button.button(type="submit" onclick="deleteHandler(this)") Delete
                                 form(action="/product-detail", method="post")
                                     input(type="hidden", name="_csrf" value=`${csrfToken}`)
                                     input(type="hidden", name="prodId" , value=`${product._id}`)

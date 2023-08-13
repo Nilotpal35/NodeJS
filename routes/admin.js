@@ -100,6 +100,6 @@ router.post(
   postEditProduct
 );
 
-router.post("/delete", deleteProduct);
+router.delete("/delete/:prodId", deleteProduct);
 
 exports.admin = router;

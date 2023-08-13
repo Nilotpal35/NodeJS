@@ -35,7 +35,7 @@ class newDataModel {
       // .collation({ locale: "en", strength: 2 })
       .sort({ title: 1 })
       .skip(skip)
-      .limit(2)
+      .limit(3)
       .toArray()
       .then((res) => {
         cb(res);
