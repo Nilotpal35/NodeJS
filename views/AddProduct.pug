@@ -5,6 +5,7 @@ html(lang="en")
         meta(name="viewport", content="width=device-width, initial-scale=1.0")
         title #{pageTitle}
         link(rel="stylesheet", href="/css/index.css")
+        script(src="/js/add.js") 
     body
         header.header_main 
             nav.header_nav
@@ -28,22 +29,23 @@ html(lang="en")
         div.main_div
             if isAuth
                 h2.title Add Product Form
-                form.form(action="/admin/add-product" , method="POST", enctype="multipart/form-data") 
-                    input(type="hidden", name="_csrf" value=`${csrfToken}`)
+                form#myForm.form( enctype="multipart/form-data") 
+                    //- div.form
+                    //- input(type="hidden", name="_csrf" value=`${csrfToken}`)
                     label(for="title") Title 
-                    input(type="text", name="title" , placeholder="title" value=`${formData && formData.title || ''}`, required)
+                    input(type="text", name="title" , placeholder="title",id="title", value=`${formData && formData.title || ''}`, required)
                     label(for="imageUrl") Image
-                    input(type="file", name="imageUrl" , placeholder="image" ,)
+                    input(type="file", name="imageUrl" , id="imageUrl",placeholder="image" ,)
                     label(for="price") Price 
                     input(type="number", name="price" ,id="price",placeholder="price" step="0.01" value=`${formData && formData.price || ''}`, required)
                     label(for="description") Description 
                     textarea(name="description", cols="20",id="description", rows="5" placeholder="description" , required) #{formData && formData.description || ''}
                     div.button-ctr
-                        button(type="submit") Add 
+                        button(type="submit" ) Add 
                         button(type="reset") Reset
             else 
                 h1.title You must have to login First
             if errorMessage 
-                p.error #{errorMessage}
+                p#error.error #{errorMessage}
         footer.main_footer
             p &copy; 2023 Nilotpal &reg; MIT License

@@ -331,7 +331,7 @@ exports.getCart = (req, res, next) => {
 
 exports.deleteProduct = (req, res, next) => {
   const { prodId } = req.params;
-  console.log("PROD ID IN SERVER", prodId);
+  // console.log("PROD ID IN SERVER", prodId);
   try {
     newDataModel.getDetails(prodId, (prodDetail) => {
       unlinkFile(path.join("store", "images", prodDetail.imageUrl));

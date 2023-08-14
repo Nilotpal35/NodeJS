@@ -19,8 +19,10 @@ function deleteHandler(button) {
     .then((res) => {
       console.log("res", res);
       currentCotainer.parentNode.removeChild(currentCotainer);
+      window.location = "/cart";
     })
     .catch((err) => {
       console.log("error in fetch", err);
     });
 }
+

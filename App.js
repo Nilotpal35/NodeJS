@@ -1,3 +1,4 @@
+require("dotenv").config();
 const adminRoute = require("./routes/admin");
 const shopRoute = require("./routes/shop");
 const homeRoute = require("./routes/home");
@@ -46,6 +47,8 @@ app.set("view engine", "pug");
 app.use(flash());
 //setting body-parser for reading static files
 app.use(body_parser.urlencoded({ extended: false }));
+
+app.use(body_parser.json());
 
 //middleware for serve static CSS/JS files  in public folder
 app.use(express.static("public"));
